@@ -1,0 +1,404 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#131315",
+                        "primary-container": "#00f0ff",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#303032",
+                        "on-primary": "#00363a",
+                        "inverse-primary": "#006970",
+                        "secondary": "#a7ffb3",
+                        "on-secondary": "#003915",
+                        "outline-variant": "#3b494b",
+                        "secondary-fixed-dim": "#00e46b",
+                        "surface-bright": "#39393b",
+                        "on-error-container": "#ffdad6",
+                        "primary": "#dbfcff",
+                        "surface-container": "#201f21",
+                        "on-surface-variant": "#b9cacb",
+                        "tertiary": "#faf3ff",
+                        "on-background": "#e5e1e4",
+                        "secondary-container": "#00ee70",
+                        "surface-container-high": "#2a2a2c",
+                        "on-secondary-container": "#00662c",
+                        "on-tertiary-fixed": "#23005b",
+                        "surface": "#131315",
+                        "on-secondary-fixed-variant": "#005322",
+                        "surface-container-lowest": "#0e0e10",
+                        "primary-fixed-dim": "#00dbe9",
+                        "on-primary-fixed": "#002022",
+                        "inverse-surface": "#e5e1e4",
+                        "on-tertiary": "#3c0090",
+                        "surface-container-highest": "#353437",
+                        "tertiary-container": "#e1d2ff",
+                        "on-error": "#690005",
+                        "surface-variant": "#353437",
+                        "on-tertiary-fixed-variant": "#5700c9",
+                        "on-tertiary-container": "#7213ff",
+                        "outline": "#849495",
+                        "surface-container-low": "#1b1b1d",
+                        "on-surface": "#e5e1e4",
+                        "primary-fixed": "#7df4ff",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed-variant": "#004f54",
+                        "tertiary-fixed-dim": "#d1bcff",
+                        "secondary-fixed": "#66ff8f",
+                        "surface-tint": "#00dbe9",
+                        "on-primary-container": "#006970",
+                        "tertiary-fixed": "#e9ddff",
+                        "on-secondary-fixed": "#00210a",
+                        "background": "#131315"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "track-height": "64px",
+                        "unit": "4px",
+                        "gutter": "16px",
+                        "sidebar-width": "280px",
+                        "margin": "24px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Space Grotesk"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display": ["Space Grotesk"],
+                        "label-caps": ["Inter"],
+                        "mono-data": ["Space Grotesk"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "h1": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.08em", "fontWeight": "700"}],
+                        "mono-data": ["13px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .waveform-segment {
+            background: linear-gradient(to top, rgba(0, 240, 255, 0.4), transparent);
+            mask-image: linear-gradient(to right, black 1px, transparent 1px);
+            mask-size: 4px 100%;
+        }
+        .meter-segment {
+            height: 2px;
+            width: 100%;
+            margin-bottom: 1px;
+        }
+        .inner-glow-zinc-800 {
+            box-shadow: inset 0 0 10px rgba(39, 39, 42, 0.5);
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}[type='text'],input:where(:not([type])),[type='email'],[type='url'],[type='password'],[type='number'],[type='date'],[type='datetime-local'],[type='month'],[type='search'],[type='tel'],[type='time'],[type='week'],[multiple],textarea,select{-webkit-appearance:none;appearance:none;background-color:#fff;border-color:#6b7280;border-width:1px;border-radius:0px;padding-top:0.5rem;padding-right:0.75rem;padding-bottom:0.5rem;padding-left:0.75rem;font-size:1rem;line-height:1.5rem;--tw-shadow:0 0 #0000;}[type='text']:focus, input:where(:not([type])):focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus{outline:2px solid transparent;outline-offset:2px;--tw-ring-inset:var(--tw-empty,/*!*/ /*!*/);--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:#2563eb;--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);border-color:#2563eb}input::placeholder,textarea::placeholder{color:#6b7280;opacity:1}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-date-and-time-value{min-height:1.5em;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit,::-webkit-datetime-edit-year-field,::-webkit-datetime-edit-month-field,::-webkit-datetime-edit-day-field,::-webkit-datetime-edit-hour-field,::-webkit-datetime-edit-minute-field,::-webkit-datetime-edit-second-field,::-webkit-datetime-edit-millisecond-field,::-webkit-datetime-edit-meridiem-field{padding-top:0;padding-bottom:0}select{background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:right 0.5rem center;background-repeat:no-repeat;background-size:1.5em 1.5em;padding-right:2.5rem;print-color-adjust:exact}[multiple],[size]:where(select:not([size="1"])){background-image:initial;background-position:initial;background-repeat:unset;background-size:initial;padding-right:0.75rem;print-color-adjust:unset}[type='checkbox'],[type='radio']{-webkit-appearance:none;appearance:none;padding:0;print-color-adjust:exact;display:inline-block;vertical-align:middle;background-origin:border-box;-webkit-user-select:none;user-select:none;flex-shrink:0;height:1rem;width:1rem;color:#2563eb;background-color:#fff;border-color:#6b7280;border-width:1px;--tw-shadow:0 0 #0000}[type='checkbox']{border-radius:0px}[type='radio']{border-radius:100%}[type='checkbox']:focus,[type='radio']:focus{outline:2px solid transparent;outline-offset:2px;--tw-ring-inset:var(--tw-empty,/*!*/ /*!*/);--tw-ring-offset-width:2px;--tw-ring-offset-color:#fff;--tw-ring-color:#2563eb;--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}[type='checkbox']:checked,[type='radio']:checked{border-color:transparent;background-color:currentColor;background-size:100% 100%;background-position:center;background-repeat:no-repeat}[type='checkbox']:checked{background-image:url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");}@media (forced-colors: active) {[type='checkbox']:checked{-webkit-appearance:auto;appearance:auto}}[type='radio']:checked{background-image:url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");}@media (forced-colors: active) {[type='radio']:checked{-webkit-appearance:auto;appearance:auto}}[type='checkbox']:checked:hover,[type='checkbox']:checked:focus,[type='radio']:checked:hover,[type='radio']:checked:focus{border-color:transparent;background-color:currentColor}[type='checkbox']:indeterminate{background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");border-color:transparent;background-color:currentColor;background-size:100% 100%;background-position:center;background-repeat:no-repeat;}@media (forced-colors: active) {[type='checkbox']:indeterminate{-webkit-appearance:auto;appearance:auto}}[type='checkbox']:indeterminate:hover,[type='checkbox']:indeterminate:focus{border-color:transparent;background-color:currentColor}[type='file']{background:unset;border-color:inherit;border-width:0;border-radius:0;padding:0;font-size:unset;line-height:inherit}[type='file']:focus{outline:1px solid ButtonText;outline:1px auto -webkit-focus-ring-color}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.bottom-0{bottom:0px}.bottom-4{bottom:1rem}.left-0{left:0px}.left-4{left:1rem}.left-\[25\%\]{left:25%}.right-4{right:1rem}.top-0{top:0px}.top-14{top:3.5rem}.top-4{top:1rem}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mr-4{margin-right:1rem}.mt-4{margin-top:1rem}.mt-auto{margin-top:auto}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-14{height:3.5rem}.h-2{height:0.5rem}.h-24{height:6rem}.h-32{height:8rem}.h-4{height:1rem}.h-64{height:16rem}.h-8{height:2rem}.h-\[10\%\]{height:10%}.h-\[100\%\]{height:100%}.h-\[15\%\]{height:15%}.h-\[20\%\]{height:20%}.h-\[30\%\]{height:30%}.h-\[35\%\]{height:35%}.h-\[40\%\]{height:40%}.h-\[45\%\]{height:45%}.h-\[50\%\]{height:50%}.h-\[55\%\]{height:55%}.h-\[60\%\]{height:60%}.h-\[65\%\]{height:65%}.h-\[70\%\]{height:70%}.h-\[75\%\]{height:75%}.h-\[80\%\]{height:80%}.h-\[85\%\]{height:85%}.h-\[90\%\]{height:90%}.h-\[95\%\]{height:95%}.h-\[calc\(100vh-112px\)\]{height:calc(100vh - 112px)}.h-full{height:100%}.min-h-\[1024px\]{min-height:1024px}.w-1{width:0.25rem}.w-10{width:2.5rem}.w-2{width:0.5rem}.w-48{width:12rem}.w-64{width:16rem}.w-8{width:2rem}.w-\[2px\]{width:2px}.w-\[85\%\]{width:85%}.w-full{width:100%}.w-px{width:1px}.max-w-2xl{max-width:42rem}.max-w-6xl{max-width:72rem}.flex-1{flex:1 1 0%}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-x-\[3px\]{--tw-translate-x:-3px;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-8{grid-template-columns:repeat(8, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.justify-around{justify-content:space-around}.gap-1{gap:0.25rem}.gap-12{gap:3rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.gap-\[1px\]{gap:1px}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.space-y-8 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(2rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(2rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.rounded{border-radius:0.25rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-sm{border-radius:0.125rem}.rounded-xl{border-radius:0.75rem}.rounded-t-sm{border-top-left-radius:0.125rem;border-top-right-radius:0.125rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-b-2{border-bottom-width:2px}.border-l-2{border-left-width:2px}.border-r{border-right-width:1px}.border-t{border-top-width:1px}.border-none{border-style:none}.border-cyan-400{--tw-border-opacity:1;border-color:rgb(34 211 238 / var(--tw-border-opacity, 1))}.border-cyan-400\/20{border-color:rgb(34 211 238 / 0.2)}.border-cyan-400\/50{border-color:rgb(34 211 238 / 0.5)}.border-white\/10{border-color:rgb(255 255 255 / 0.1)}.border-white\/5{border-color:rgb(255 255 255 / 0.05)}.border-zinc-700{--tw-border-opacity:1;border-color:rgb(63 63 70 / var(--tw-border-opacity, 1))}.border-zinc-800{--tw-border-opacity:1;border-color:rgb(39 39 42 / var(--tw-border-opacity, 1))}.border-zinc-800\/30{border-color:rgb(39 39 42 / 0.3)}.border-zinc-800\/50{border-color:rgb(39 39 42 / 0.5)}.bg-cyan-400{--tw-bg-opacity:1;background-color:rgb(34 211 238 / var(--tw-bg-opacity, 1))}.bg-cyan-400\/10{background-color:rgb(34 211 238 / 0.1)}.bg-cyan-500{--tw-bg-opacity:1;background-color:rgb(6 182 212 / var(--tw-bg-opacity, 1))}.bg-cyan-500\/10{background-color:rgb(6 182 212 / 0.1)}.bg-cyan-500\/20{background-color:rgb(6 182 212 / 0.2)}.bg-cyan-500\/30{background-color:rgb(6 182 212 / 0.3)}.bg-cyan-500\/40{background-color:rgb(6 182 212 / 0.4)}.bg-cyan-500\/50{background-color:rgb(6 182 212 / 0.5)}.bg-surface-container{--tw-bg-opacity:1;background-color:rgb(32 31 33 / var(--tw-bg-opacity, 1))}.bg-surface-dim{--tw-bg-opacity:1;background-color:rgb(19 19 21 / var(--tw-bg-opacity, 1))}.bg-transparent{background-color:transparent}.bg-zinc-800{--tw-bg-opacity:1;background-color:rgb(39 39 42 / var(--tw-bg-opacity, 1))}.bg-zinc-800\/80{background-color:rgb(39 39 42 / 0.8)}.bg-zinc-900{--tw-bg-opacity:1;background-color:rgb(24 24 27 / var(--tw-bg-opacity, 1))}.bg-zinc-900\/40{background-color:rgb(24 24 27 / 0.4)}.bg-zinc-900\/50{background-color:rgb(24 24 27 / 0.5)}.bg-zinc-900\/60{background-color:rgb(24 24 27 / 0.6)}.bg-zinc-950{--tw-bg-opacity:1;background-color:rgb(9 9 11 / var(--tw-bg-opacity, 1))}.bg-zinc-950\/50{background-color:rgb(9 9 11 / 0.5)}.bg-zinc-950\/80{background-color:rgb(9 9 11 / 0.8)}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-cyan-400{--tw-gradient-from:#22d3ee var(--tw-gradient-from-position);--tw-gradient-to:rgb(34 211 238 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-secondary{--tw-gradient-to:#a7ffb3 var(--tw-gradient-to-position)}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-1{padding-bottom:0.25rem}.pb-14{padding-bottom:3.5rem}.pt-14{padding-top:3.5rem}.pt-2{padding-top:0.5rem}.pt-4{padding-top:1rem}.text-center{text-align:center}.text-right{text-align:right}.font-\[\'Space_Grotesk\'\]{font-family:'Space Grotesk'}.font-body-md{font-family:Inter}.font-h1{font-family:Space Grotesk}.font-h2{font-family:Space Grotesk}.font-label-caps{font-family:Inter}.font-mono-data{font-family:Space Grotesk}.text-\[10px\]{font-size:10px}.text-\[9px\]{font-size:9px}.text-body-md{font-size:16px;line-height:1.5;font-weight:400}.text-h1{font-size:32px;line-height:1.2;font-weight:600}.text-h2{font-size:24px;line-height:1.3;font-weight:500}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-relaxed{line-height:1.625}.tracking-tight{letter-spacing:-0.025em}.tracking-tighter{letter-spacing:-0.05em}.tracking-widest{letter-spacing:0.1em}.text-cyan-400{--tw-text-opacity:1;color:rgb(34 211 238 / var(--tw-text-opacity, 1))}.text-cyan-400\/60{color:rgb(34 211 238 / 0.6)}.text-cyan-400\/70{color:rgb(34 211 238 / 0.7)}.text-error{--tw-text-opacity:1;color:rgb(255 180 171 / var(--tw-text-opacity, 1))}.text-on-surface{--tw-text-opacity:1;color:rgb(229 225 228 / var(--tw-text-opacity, 1))}.text-on-surface-variant{--tw-text-opacity:1;color:rgb(185 202 203 / var(--tw-text-opacity, 1))}.text-secondary{--tw-text-opacity:1;color:rgb(167 255 179 / var(--tw-text-opacity, 1))}.text-secondary-container{--tw-text-opacity:1;color:rgb(0 238 112 / var(--tw-text-opacity, 1))}.text-zinc-200{--tw-text-opacity:1;color:rgb(228 228 231 / var(--tw-text-opacity, 1))}.text-zinc-300{--tw-text-opacity:1;color:rgb(212 212 216 / var(--tw-text-opacity, 1))}.text-zinc-400{--tw-text-opacity:1;color:rgb(161 161 170 / var(--tw-text-opacity, 1))}.text-zinc-500{--tw-text-opacity:1;color:rgb(113 113 122 / var(--tw-text-opacity, 1))}.text-zinc-600{--tw-text-opacity:1;color:rgb(82 82 91 / var(--tw-text-opacity, 1))}.text-zinc-950{--tw-text-opacity:1;color:rgb(9 9 11 / var(--tw-text-opacity, 1))}.opacity-80{opacity:0.8}.shadow-\[0_-4px_20px_rgba\(0\2c 0\2c 0\2c 0\.5\)\]{--tw-shadow:0 -4px 20px rgba(0,0,0,0.5);--tw-shadow-colored:0 -4px 20px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_0_15px_rgba\(0\2c 240\2c 255\2c 0\.6\)\]{--tw-shadow:0 0 15px rgba(0,240,255,0.6);--tw-shadow-colored:0 0 15px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_0_20px_rgba\(0\2c 240\2c 255\2c 0\.3\)\]{--tw-shadow:0 0 20px rgba(0,240,255,0.3);--tw-shadow-colored:0 0 20px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_0_8px_rgba\(0\2c 240\2c 255\2c 0\.4\)\]{--tw-shadow:0 0 8px rgba(0,240,255,0.4);--tw-shadow-colored:0 0 8px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.drop-shadow-\[0_0_8px_rgba\(0\2c 240\2c 255\2c 0\.4\)\]{--tw-drop-shadow:drop-shadow(0 0 8px rgba(0,240,255,0.4));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-xl{--tw-backdrop-blur:blur(24px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-150{transition-duration:150ms}.ease-in-out{transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1)}.selection\:bg-primary-container *::selection{--tw-bg-opacity:1;background-color:rgb(0 240 255 / var(--tw-bg-opacity, 1))}.selection\:text-on-primary-container *::selection{--tw-text-opacity:1;color:rgb(0 105 112 / var(--tw-text-opacity, 1))}.selection\:bg-primary-container::selection{--tw-bg-opacity:1;background-color:rgb(0 240 255 / var(--tw-bg-opacity, 1))}.selection\:text-on-primary-container::selection{--tw-text-opacity:1;color:rgb(0 105 112 / var(--tw-text-opacity, 1))}.hover\:bg-cyan-400\/20:hover{background-color:rgb(34 211 238 / 0.2)}.hover\:bg-zinc-800:hover{--tw-bg-opacity:1;background-color:rgb(39 39 42 / var(--tw-bg-opacity, 1))}.hover\:bg-zinc-800\/50:hover{background-color:rgb(39 39 42 / 0.5)}.hover\:text-cyan-200:hover{--tw-text-opacity:1;color:rgb(165 243 252 / var(--tw-text-opacity, 1))}.hover\:text-cyan-300:hover{--tw-text-opacity:1;color:rgb(103 232 249 / var(--tw-text-opacity, 1))}.hover\:text-zinc-300:hover{--tw-text-opacity:1;color:rgb(212 212 216 / var(--tw-text-opacity, 1))}.hover\:brightness-110:hover{--tw-brightness:brightness(1.1);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.focus\:ring-0:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.active\:scale-\[0\.98\]:active{--tw-scale-x:0.98;--tw-scale-y:0.98;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.active\:ring-1:active{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.active\:ring-cyan-400:active{--tw-ring-opacity:1;--tw-ring-color:rgb(34 211 238 / var(--tw-ring-opacity, 1))}.active\:ring-offset-2:active{--tw-ring-offset-width:2px}.active\:ring-offset-zinc-950:active{--tw-ring-offset-color:#09090b}@media (min-width: 768px){.md\:ml-64{margin-left:16rem}.md\:flex{display:flex}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:col-span-3{grid-column:span 3 / span 3}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}</style></head>
+<body class="bg-surface-dim text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container" data-mode="connect">
+<header class="bg-zinc-950/80 backdrop-blur-xl border-b border-white/10 flex justify-between items-center w-full px-6 h-14 z-50 fixed top-0">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black italic tracking-tighter text-cyan-400 font-['Space_Grotesk']">AuraDAW</span>
+<div class="hidden md:flex items-center bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-800">
+<span class="material-symbols-outlined text-zinc-500 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-xs w-48 text-zinc-300" placeholder="Search assets..." type="text">
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-8 font-['Space_Grotesk'] tracking-tight">
+<a class="text-zinc-500 hover:text-zinc-300 transition-colors" href="#">Project</a>
+<a class="text-zinc-500 hover:text-zinc-300 transition-colors" href="#">Library</a>
+<a class="text-cyan-400 border-b-2 border-cyan-400 pb-1" href="#">Automation</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3 mr-4">
+<span class="material-symbols-outlined text-zinc-500 hover:text-cyan-300 cursor-pointer transition-all">settings</span>
+<span class="material-symbols-outlined text-zinc-500 hover:text-cyan-300 cursor-pointer transition-all">help</span>
+</div>
+<button class="bg-cyan-500/10 text-cyan-400 border border-cyan-400/50 px-4 py-1.5 rounded-sm font-['Space_Grotesk'] text-sm font-bold active:scale-95 duration-150 ease-in-out">
+                Export
+            </button>
+</div>
+</header>
+<aside class="hidden md:flex bg-zinc-900/50 backdrop-blur-md fixed left-0 top-14 h-[calc(100vh-112px)] w-64 border-r border-white/5 flex-col py-4 z-40">
+<div class="px-6 mb-8">
+<h3 class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-zinc-500">Studio Session</h3>
+<p class="text-[10px] text-cyan-400/70 font-mono-data">128 BPM / 4/4</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 text-zinc-500 hover:bg-zinc-800/50 transition-all" href="#">
+<span class="material-symbols-outlined text-lg">grid_view</span>
+<span class="font-['Space_Grotesk'] text-xs uppercase tracking-widest">BEAT MAKER</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 bg-cyan-500/10 text-cyan-400 border-l-2 border-cyan-400 transition-all" href="{{DATA:SCREEN:SCREEN_7}}"><span class="material-symbols-outlined text-lg">speed</span><span class="font-['Space_Grotesk'] text-xs uppercase tracking-widest">BPM ANALYSIS</span></a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-cyan-400/10 border border-cyan-400/20 text-cyan-400 py-3 rounded-lg flex items-center justify-center gap-2 mb-6 hover:bg-cyan-400/20 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-tighter">New Pattern</span>
+</button>
+<a class="flex items-center gap-3 py-3 text-zinc-500 hover:text-cyan-200 transition-all" href="#">
+<span class="material-symbols-outlined text-lg">tune</span>
+<span class="font-['Space_Grotesk'] text-xs uppercase tracking-widest">Settings</span>
+</a>
+</div>
+</aside>
+<main class="md:ml-64 pt-14 pb-14 min-h-[1024px]" data-stitch-vh="min-h-[1024px]===min-h-screen">
+<div class="p-8 max-w-6xl mx-auto space-y-8">
+<header class="space-y-2">
+<div class="flex items-center gap-2 text-cyan-400 mb-1">
+<span class="material-symbols-outlined text-sm">analytics</span>
+<span class="font-label-caps text-xs">AI ANALYTICS ENGINE</span>
+</div>
+<h1 class="font-h1 text-h1 text-on-surface">Waveform BPM Analysis</h1>
+<p class="text-on-surface-variant font-body-md max-w-2xl">Detecting transient markers and rhythmic consistency for ultra-precise beat matching.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+<div class="lg:col-span-3 space-y-6">
+<div class="bg-zinc-900/40 rounded-xl border border-zinc-800 overflow-hidden backdrop-blur-sm">
+<div class="p-6 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/60">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center border border-zinc-700">
+<span class="material-symbols-outlined text-cyan-400">audio_file</span>
+</div>
+<div>
+<h4 class="font-h2 text-body-md text-on-surface">neon_nights_main_loop.mp3</h4>
+<p class="text-xs text-zinc-500">Processed in 1.2s</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<span class="block text-[10px] text-zinc-500 uppercase tracking-widest">Global Tempo</span>
+<span class="text-h2 font-mono-data text-cyan-400">128.00</span>
+</div>
+<div class="h-8 w-px bg-zinc-800"></div>
+<div class="text-right">
+<span class="block text-[10px] text-zinc-500 uppercase tracking-widest">Key</span>
+<span class="text-h2 font-mono-data text-secondary-container">Cm</span>
+</div>
+</div>
+</div>
+<div class="h-64 relative bg-zinc-950/50 p-4 group">
+<div class="absolute inset-0 grid grid-cols-8 pointer-events-none">
+<div class="border-r border-zinc-800/30"></div>
+<div class="border-r border-zinc-800/30"></div>
+<div class="border-r border-zinc-800/30"></div>
+<div class="border-r border-zinc-800/30"></div>
+<div class="border-r border-zinc-800/30"></div>
+<div class="border-r border-zinc-800/30"></div>
+<div class="border-r border-zinc-800/30"></div>
+<div></div>
+</div>
+<div class="absolute inset-0 flex items-center justify-between px-4">
+<div class="flex items-end gap-[1px] w-full h-32 opacity-80">
+<div class="bg-cyan-500 h-[20%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[35%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[50%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[80%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[65%] w-1 rounded-full"></div>
+<div class="bg-cyan-400 h-[95%] w-1 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.4)]"></div>
+<div class="bg-cyan-500 h-[60%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[40%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[55%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[70%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[45%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[30%] w-1 rounded-full"></div>
+<div class="bg-cyan-400 h-[85%] w-1 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.4)]"></div>
+<div class="bg-cyan-500 h-[60%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[40%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[55%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[90%] w-1 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.4)]"></div>
+<div class="bg-cyan-500 h-[60%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[45%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[75%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[40%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[55%] w-1 rounded-full"></div>
+<div class="bg-cyan-400 h-[100%] w-1 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.4)]"></div>
+<div class="bg-cyan-500 h-[65%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[50%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[40%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[35%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[80%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[60%] w-1 rounded-full"></div>
+<div class="bg-cyan-400 h-[90%] w-1 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.4)]"></div>
+<div class="bg-cyan-500 h-[70%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[55%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[45%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[30%] w-1 rounded-full"></div>
+<div class="bg-cyan-400 h-[100%] w-1 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.4)]"></div>
+<div class="bg-cyan-500 h-[60%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[40%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[55%] w-1 rounded-full"></div>
+<div class="bg-cyan-500 h-[90%] w-1 rounded-full shadow-[0_0_8px_rgba(0,240,255,0.4)]"></div>
+</div>
+</div>
+<div class="absolute top-0 left-[25%] bottom-0 w-[2px] bg-cyan-400 shadow-[0_0_15px_rgba(0,240,255,0.6)] z-10 flex flex-col justify-between">
+<div class="bg-cyan-400 text-[10px] text-zinc-950 font-bold px-1.5 py-0.5 rounded-sm -translate-x-1/2">PLAYHEAD</div>
+<div class="bg-cyan-400 h-2 w-2 rounded-full -translate-x-[3px]"></div>
+</div>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-zinc-800/80 backdrop-blur-md px-2 py-1 rounded text-[10px] text-zinc-300 font-mono-data border border-white/5">00:00.00</span>
+</div>
+<div class="absolute top-4 right-4 flex gap-2">
+<span class="bg-zinc-800/80 backdrop-blur-md px-2 py-1 rounded text-[10px] text-zinc-300 font-mono-data border border-white/5">04:12.45</span>
+</div>
+<div class="absolute bottom-4 left-0 w-full flex justify-around px-8">
+<div class="flex flex-col items-center">
+<div class="h-4 w-px bg-cyan-500/50 mb-1"></div>
+<span class="text-[9px] text-cyan-400/60 font-mono-data">128.02</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="h-4 w-px bg-cyan-500/50 mb-1"></div>
+<span class="text-[9px] text-cyan-400/60 font-mono-data">127.98</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="h-4 w-px bg-cyan-500/50 mb-1"></div>
+<span class="text-[9px] text-cyan-400/60 font-mono-data">128.00</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="h-4 w-px bg-cyan-500/50 mb-1"></div>
+<span class="text-[9px] text-cyan-400/60 font-mono-data">128.05</span>
+</div>
+</div>
+</div>
+<div class="p-4 bg-zinc-900/60 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="w-8 h-8 rounded-full border border-zinc-700 flex items-center justify-center hover:bg-zinc-800 transition-all">
+<span class="material-symbols-outlined text-lg">play_arrow</span>
+</button>
+<div class="text-xs font-mono-data text-zinc-400">Current Slice: <span class="text-on-surface">BAR 04 / BEAT 01</span></div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-1.5 rounded-lg text-xs font-['Space_Grotesk'] text-zinc-400 hover:bg-zinc-800 transition-all">Recalculate</button>
+<button class="px-4 py-1.5 rounded-lg text-xs font-['Space_Grotesk'] text-zinc-400 hover:bg-zinc-800 transition-all">Manual Grid</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-zinc-900/40 p-5 rounded-xl border border-zinc-800 space-y-4">
+<h5 class="font-label-caps text-zinc-500 text-[10px]">Segment Variance</h5>
+<div class="flex items-end gap-1 h-24 px-2">
+<div class="flex-1 bg-cyan-500/20 h-[40%] rounded-t-sm"></div>
+<div class="flex-1 bg-cyan-500/20 h-[45%] rounded-t-sm"></div>
+<div class="flex-1 bg-cyan-500/40 h-[60%] rounded-t-sm"></div>
+<div class="flex-1 bg-cyan-500/20 h-[30%] rounded-t-sm"></div>
+<div class="flex-1 bg-cyan-500/10 h-[10%] rounded-t-sm"></div>
+<div class="flex-1 bg-cyan-500/50 h-[80%] rounded-t-sm"></div>
+<div class="flex-1 bg-cyan-500/20 h-[35%] rounded-t-sm"></div>
+<div class="flex-1 bg-cyan-500/30 h-[50%] rounded-t-sm"></div>
+<div class="flex-1 bg-cyan-500/10 h-[15%] rounded-t-sm"></div>
+<div class="flex-1 bg-cyan-500/20 h-[40%] rounded-t-sm"></div>
+</div>
+<div class="flex justify-between items-center pt-2">
+<span class="text-xs text-zinc-500">Stability Rating</span>
+<span class="text-xs font-mono-data text-secondary">99.2% EXCELLENT</span>
+</div>
+</div>
+<div class="bg-zinc-900/40 p-5 rounded-xl border border-zinc-800 flex flex-col justify-center gap-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-zinc-500">graphic_eq</span>
+<span class="text-xs font-label-caps text-zinc-400">LUFS Meter</span>
+</div>
+<span class="text-xs font-mono-data text-error">-1.2 dB</span>
+</div>
+<div class="space-y-1">
+<div class="h-2 bg-zinc-800 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-cyan-400 to-secondary w-[85%]"></div>
+</div>
+<div class="flex justify-between text-[10px] text-zinc-600 font-mono-data">
+<span class="">-inf</span>
+<span class="">-18</span>
+<span class="">-12</span>
+<span class="">-6</span>
+<span class="">0</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<div class="bg-zinc-900/60 p-6 rounded-xl border border-zinc-800 space-y-6">
+<h3 class="font-h2 text-body-md text-on-surface">File Metadata</h3>
+<div class="space-y-4">
+<div class="flex justify-between py-2 border-b border-zinc-800/50">
+<span class="text-xs text-zinc-500 uppercase tracking-tight">Bitrate</span>
+<span class="text-xs font-mono-data text-zinc-200">320 kbps</span>
+</div>
+<div class="flex justify-between py-2 border-b border-zinc-800/50">
+<span class="text-xs text-zinc-500 uppercase tracking-tight">Duration</span>
+<span class="text-xs font-mono-data text-zinc-200">04:12</span>
+</div>
+<div class="flex justify-between py-2 border-b border-zinc-800/50">
+<span class="text-xs text-zinc-500 uppercase tracking-tight">Genre</span>
+<span class="text-xs font-mono-data text-zinc-200">Synthwave</span>
+</div>
+<div class="flex justify-between py-2 border-b border-zinc-800/50">
+<span class="text-xs text-zinc-500 uppercase tracking-tight">Sample Rate</span>
+<span class="text-xs font-mono-data text-zinc-200">44.1 kHz</span>
+</div>
+<div class="flex justify-between py-2">
+<span class="text-xs text-zinc-500 uppercase tracking-tight">Channels</span>
+<span class="text-xs font-mono-data text-zinc-200">Stereo</span>
+</div>
+</div>
+<div class="pt-4">
+<button class="w-full bg-cyan-400 text-zinc-950 font-['Space_Grotesk'] font-bold py-3 rounded-lg flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:brightness-110 active:scale-[0.98] transition-all">
+<span class="">Proceed to Beat Making</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<p class="text-[10px] text-zinc-500 text-center mt-4">Analysis results will be saved to your session library automatically.</p>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl border border-zinc-800/50 space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container">auto_fix_high</span>
+<h4 class="text-xs font-label-caps text-secondary-container">AI INSIGHTS</h4>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                            "Rhythm detected as 4/4 standard with minor swing in the percussion transients. Recommended quantization: 1/16th note."
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-zinc-950 border-t border-zinc-800 fixed bottom-0 left-0 w-full z-50 flex justify-center gap-12 items-center px-8 h-14 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+<button class="flex flex-col items-center justify-center text-zinc-600 hover:text-zinc-300 group">
+<span class="material-symbols-outlined text-xl">play_arrow</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold">Play</span>
+</button>
+<button class="flex flex-col items-center justify-center text-zinc-600 hover:text-zinc-300 group">
+<span class="material-symbols-outlined text-xl">stop</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold">Stop</span>
+</button>
+<button class="flex flex-col items-center justify-center text-cyan-400 drop-shadow-[0_0_8px_rgba(0,240,255,0.4)] active:ring-1 active:ring-cyan-400 active:ring-offset-2 active:ring-offset-zinc-950">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: &quot;FILL&quot; 1;">fiber_manual_record</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold">Record</span>
+</button>
+<button class="flex flex-col items-center justify-center text-zinc-600 hover:text-zinc-300 group">
+<span class="material-symbols-outlined text-xl">all_inclusive</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold">Loop</span>
+</button>
+<button class="flex flex-col items-center justify-center text-zinc-600 hover:text-zinc-300 group">
+<span class="material-symbols-outlined text-xl">timer</span>
+<span class="font-['Space_Grotesk'] text-[10px] font-bold">Metronome</span>
+</button>
+</footer>
+</body></html>
