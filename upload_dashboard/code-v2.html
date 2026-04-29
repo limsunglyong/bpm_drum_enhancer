@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#131315",
+                        "primary-container": "#00f0ff",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#303032",
+                        "on-primary": "#00363a",
+                        "inverse-primary": "#00696e",
+                        "on-primary-container": "#97f0ff",
+                        "surface-variant": "#3f484a",
+                        "on-surface-variant": "#bfc8ca",
+                        "outline": "#899294",
+                        "surface-container-high": "#272a2c",
+                        "surface-container-highest": "#323537",
+                        "on-surface": "#e1e2e3",
+                        "outline-variant": "#3f484a",
+                        "surface-container-low": "#1b1e20",
+                        "surface-container-lowest": "#0d1011",
+                        "surface-container": "#212426",
+                        "secondary": "#a7ffb3",
+                        "secondary-container": "#00522a",
+                        "on-secondary-container": "#c3ffcf",
+                        "error": "#ffb4ab"
+                    },
+                    "spacing": {
+                        "gutter": "16px"
+                    },
+                    "borderRadius": {
+                        "xl": "12px"
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #131315;
+            color: #e1e2e3;
+        }
+
+        .font-h2 {
+            font-family: 'Space_Grotesk', sans-serif;
+            font-weight: 700;
+        }
+
+        .text-h2 {
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+
+        .font-mono-data {
+            font-family: 'Space_Grotesk', monospace;
+            font-weight: 500;
+        }
+
+        /* Live Input Preview 배경 파형 효과 */
+        .waveform-preview {
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.4) 0%, rgba(114, 19, 255, 0.4) 100%);
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='200' height='40' viewBox='0 0 200 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 L5 10 L10 30 L15 15 L20 25 L25 5 L30 35 L35 20 L40 10 L45 30 L50 15 L55 25 L60 5 L65 35 L70 20 L75 10 L80 30 L85 15 L90 25 L95 5 L100 35 L105 20 L110 10 L115 30 L120 15 L125 25 L130 5 L135 35 L140 20 L145 10 L150 30 L155 15 L160 25 L165 5 L170 35 L175 20 L180 10 L185 30 L190 15 L195 25 L200 20' stroke='black' fill='transparent'/%3E%3C/svg%3E");
+            -webkit-mask-size: cover;
+            -webkit-mask-repeat: no-repeat;
+            mask-image: url("data:image/svg+xml,%3Csvg width='200' height='40' viewBox='0 0 200 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 L5 10 L10 30 L15 15 L20 25 L25 5 L30 35 L35 20 L40 10 L45 30 L50 15 L55 25 L60 5 L65 35 L70 20 L75 10 L80 30 L85 15 L90 25 L95 5 L100 35 L105 20 L110 10 L115 30 L120 15 L125 25 L130 5 L135 35 L140 20 L145 10 L150 30 L155 15 L160 25 L165 5 L170 35 L175 20 L180 10 L185 30 L190 15 L195 25 L200 20' stroke='black' fill='transparent'/%3E%3C/svg%3E");
+            mask-size: cover;
+            mask-repeat: no-repeat;
+        }
+    </style>
+</head>
+
+<body class="bg-surface-dim text-on-surface flex flex-col min-h-screen">
+    <header
+        class="h-16 border-b border-zinc-800 flex items-center justify-between px-8 bg-surface-dim/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <div
+                class="w-10 h-10 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(0,240,255,0.3)]">
+                <span class="material-symbols-outlined text-zinc-950 font-bold">equalizer</span>
+            </div>
+            <h1 class="font-h2 text-xl tracking-tighter italic text-zinc-100">
+                Focustone <span class="text-cyan-400">DAW</span>
+            </h1>
+        </div>
+        <nav class="hidden md:flex items-center gap-8">
+            <a class="text-xs uppercase tracking-widest font-bold text-cyan-400 border-b-2 border-cyan-400 pb-1"
+                href="#">Studio</a>
+            <a class="text-xs uppercase tracking-widest font-bold text-zinc-500 hover:text-zinc-300 transition-colors"
+                href="#">Library</a>
+            <a class="text-xs uppercase tracking-widest font-bold text-zinc-500 hover:text-zinc-300 transition-colors"
+                href="#">Plugins</a>
+            <a class="text-xs uppercase tracking-widest font-bold text-zinc-500 hover:text-zinc-300 transition-colors"
+                href="#">AI Lab</a>
+        </nav>
+        <div class="flex items-center gap-4">
+            <button class="p-2 text-zinc-400 hover:text-cyan-400 transition-colors"><span
+                    class="material-symbols-outlined">notifications</span></button>
+            <div class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 overflow-hidden"><img alt="User avatar"
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"></div>
+        </div>
+    </header>
+
+    <main class="flex-1 p-gutter max-w-[1600px] mx-auto w-full flex flex-col gap-gutter">
+
+        <div class="grid grid-cols-12 gap-gutter">
+
+            <div class="col-span-12 lg:col-span-7 h-96 relative group">
+                <div id="drop-zone"
+                    class="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-transparent rounded-xl border border-dashed border-zinc-700 group-hover:border-cyan-400/50 transition-all flex flex-col items-center justify-center text-center p-8">
+                    <div
+                        class="w-20 h-20 bg-zinc-950 rounded-full flex items-center justify-center mb-6 border border-zinc-800 shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]">
+                        <span
+                            class="material-symbols-outlined text-4xl text-cyan-400 group-hover:scale-110 transition-transform">cloud_upload</span>
+                    </div>
+                    <h2 class="font-h2 text-h2 mb-2">Drop MP3 files here</h2>
+                    <p class="text-zinc-500 max-w-xs mx-auto">Upload stems, vocals, or master tracks to begin
+                        AI-enhanced processing.</p>
+
+                    <input type="file" id="audio-upload" accept="audio/mp3" class="hidden">
+                    <button onclick="document.getElementById('audio-upload').click()"
+                        class="mt-6 px-8 py-3 bg-cyan-400 text-on-primary rounded font-bold text-sm uppercase tracking-widest active:scale-95 transition-all">
+                        Select MP3 File
+                    </button>
+                    <div id="file-info-display"
+                        class="hidden mt-6 p-4 bg-zinc-900/80 border border-zinc-800 rounded-lg text-left max-w-sm mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-cyan-400 mt-0.5">info</span>
+                            <div class="space-y-1">
+                                <div id="info-name" class="text-sm font-bold text-zinc-100 truncate w-64">File Name
+                                </div>
+                                <div
+                                    class="grid grid-cols-2 gap-x-4 gap-y-1 text-[10px] uppercase tracking-wider font-mono-data text-zinc-500">
+                                    <span>Artist:</span> <span id="info-artist" class="text-zinc-300">-</span>
+                                    <span>Length:</span> <span id="info-duration" class="text-zinc-300">00:00</span>
+                                    <span>Format:</span> <span id="info-format" class="text-zinc-300">MP3 /
+                                        44.1kHz</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-5 flex flex-col gap-gutter">
+                <div class="bg-surface-container rounded-xl border border-zinc-800 p-gutter">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-zinc-500">System
+                            Performance</h3>
+                        <span class="material-symbols-outlined text-cyan-400 text-sm">analytics</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-[10px] mb-1 uppercase font-bold tracking-wider">
+                                <span class="text-zinc-400">CPU Load</span>
+                                <span class="text-secondary">14%</span>
+                            </div>
+                            <div class="h-1 bg-zinc-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-secondary w-[14%] shadow-[0_0_8px_#a7ffb3]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[10px] mb-1 uppercase font-bold tracking-wider">
+                                <span class="text-zinc-400">Memory (RAM)</span>
+                                <span class="text-cyan-400">2.4GB / 32GB</span>
+                            </div>
+                            <div class="h-1 bg-zinc-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-cyan-400 w-[8%] shadow-[0_0_8px_#00f0ff]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="flex-1 bg-surface-container rounded-xl border border-zinc-800 p-gutter relative overflow-hidden min-h-[160px]">
+                    <div class="absolute inset-0 opacity-20 waveform-preview"></div>
+
+                    <canvas id="waveform-canvas"
+                        class="absolute inset-0 w-full h-full opacity-90 transition-opacity duration-500"></canvas>
+
+                    <div class="relative z-10 h-full flex flex-col justify-end">
+                        <h3 class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest text-cyan-400 mb-2">Live
+                            Input Preview</h3>
+                        <div class="flex items-end gap-1 h-8">
+                            <div class="w-1 bg-cyan-400 h-4 rounded-full"></div>
+                            <div class="w-1 bg-cyan-400 h-6 rounded-full"></div>
+                            <div class="w-1 bg-cyan-400 h-8 rounded-full"></div>
+                            <div class="w-1 bg-cyan-400 h-5 rounded-full"></div>
+                            <div class="w-1 bg-cyan-400 h-7 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 bg-surface-container rounded-xl border border-zinc-800 overflow-hidden">
+            <div class="p-gutter border-b border-zinc-800/50 flex justify-between items-center bg-zinc-900/30">
+                <h3 class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest text-zinc-500">Recent Processed
+                    Files</h3>
+                <button class="text-[10px] uppercase tracking-widest text-cyan-400 font-bold hover:underline">View
+                    All</button>
+            </div>
+            <div class="divide-y divide-zinc-800/50">
+                <div class="p-4 flex items-center justify-between hover:bg-white/5 transition-colors group">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 bg-zinc-950 rounded flex items-center justify-center border border-zinc-800 group-hover:border-cyan-400/30">
+                            <span class="material-symbols-outlined text-cyan-400 text-sm">music_note</span>
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-zinc-300">Midnight_Fever_Lead_Vocals.mp3</div>
+                            <div class="text-[10px] text-zinc-500">AI Stem Extraction • 4.2 MB • 2m ago</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-8">
+                        <div class="text-right">
+                            <div class="text-[10px] text-zinc-500 uppercase">Detected BPM</div>
+                            <div class="text-sm font-mono-data text-cyan-400">124.0</div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="p-2 hover:bg-zinc-800 rounded transition-colors text-zinc-500 hover:text-cyan-400"><span
+                                    class="material-symbols-outlined text-sm">download</span></button>
+                            <button
+                                class="p-2 hover:bg-zinc-800 rounded transition-colors text-zinc-500 hover:text-cyan-400"><span
+                                    class="material-symbols-outlined text-sm">more_vert</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer
+        class="h-20 border-t border-zinc-800 bg-surface-dim/95 backdrop-blur-xl px-8 flex items-center justify-center gap-12 sticky bottom-0 z-50">
+        <div class="absolute left-8 flex items-center gap-6">
+            <div>
+                <div class="text-[10px] text-zinc-500 font-mono-data">MASTER GAIN</div>
+                <div class="h-1.5 w-32 bg-zinc-800 rounded-full mt-1 overflow-hidden">
+                    <div class="h-full bg-cyan-400 w-[72%]"></div>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-10">
+            <button class="text-zinc-400 hover:text-zinc-100 transition-colors"><span
+                    class="material-symbols-outlined text-3xl">skip_previous</span></button>
+            <button id="btn-play" class="...">
+                <span id="play-icon" class="material-symbols-outlined text-4xl">play_arrow</span>
+            </button>
+            <button id="btn-stop"
+                class="w-14 h-14 bg-zinc-950 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-100 hover:border-error/50 hover:text-error transition-all active:scale-90 shadow-lg"><span
+                    class="material-symbols-outlined text-4xl">stop</span></button>
+            <button class="text-zinc-400 hover:text-zinc-100 transition-colors"><span
+                    class="material-symbols-outlined text-3xl">skip_next</span></button>
+        </div>
+        <div class="absolute right-8 text-right">
+            <div class="text-[10px] text-zinc-500 font-mono-data">TIMELINE</div>
+            <div class="font-mono-data text-cyan-400 text-sm tracking-widest">00:00:00:00</div>
+        </div>
+    </footer>
+
+    <script>
+        let audioContext;
+        let audioBuffer;
+        let sourceNode;
+        let isPlaying = false;
+        let isPaused = false;
+
+        // --- 기존 변수 선언부 아래 추가 ---
+        let startTime = 0;      // 재생 시작 시간
+        let pauseTime = 0;      // 일시정지 대비(현재는 미구현이나 확장성 위해)
+        let animationId;        // 애니메이션 프레임 ID
+
+        const fileInput = document.getElementById('audio-upload');
+        const canvas = document.getElementById('waveform-canvas');
+        const ctx = canvas.getContext('2d');
+        const btnPlay = document.getElementById('btn-play');
+        const btnStop = document.getElementById('btn-stop');
+        const dropZone = document.getElementById('drop-zone');
+
+        // --- 공통 파일 처리 함수 ---
+        async function handleAudioFile(file) {
+            // 새 파일 로드 시 기존 소리 정지
+            if (sourceNode && isPlaying) {
+                sourceNode.stop();
+                isPlaying = false;
+                btnPlay.classList.remove('text-cyan-400');
+            }
+
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const arrayBuffer = await file.arrayBuffer();
+            audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+            // 2. 파일 정보 표시 업데이트 (새로 추가된 부분)
+            updateFileInfoDisplay(file, audioBuffer);
+
+            drawWaveform(audioBuffer);
+            console.log("Audio visualized in Right Preview");
+        }
+
+        // 3. 정보 표시 업데이트 함수 추가
+        function updateFileInfoDisplay(file, buffer) {
+            const display = document.getElementById('file-info-display');
+            const nameEl = document.getElementById('info-name');
+            const artistEl = document.getElementById('info-artist');
+            const durationEl = document.getElementById('info-duration');
+            const formatEl = document.getElementById('info-format');
+
+            // 표시 영역 보이기
+            display.classList.remove('hidden');
+
+            // 데이터 삽입
+            nameEl.textContent = file.name;
+            artistEl.textContent = "Unknown Artist"; // 라이브러리 없이 기본 제공되지 않으므로 고정값 또는 '-'
+
+            // 노래 길이 계산 (분:초)
+            const minutes = Math.floor(buffer.duration / 60);
+            const seconds = Math.floor(buffer.duration % 60);
+            durationEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            // 인코딩/포맷 정보
+            formatEl.textContent = `${file.type.replace('audio/', '').toUpperCase()} / ${buffer.sampleRate / 1000}kHz`;
+        }
+
+        // --- 드래그 앤 드롭 이벤트 ---
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-cyan-400', 'bg-cyan-400/10');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-cyan-400', 'bg-cyan-400/10');
+        });
+
+        dropZone.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-cyan-400', 'bg-cyan-400/10');
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && (files[0].type === "audio/mpeg" || files[0].name.toLowerCase().endsWith('.mp3'))) {
+                handleAudioFile(files[0]);
+            } else {
+                alert("Please drop an MP3 file.");
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) handleAudioFile(file);
+        });
+
+        // --- 파형 그리기 (Right Side) ---
+        function drawWaveform(buffer, isPlayed = false) {
+            // 캔버스 크기 초기화 방지
+            if (canvas.width === 0 || canvas.width !== canvas.offsetWidth) {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+
+            const data = buffer.getChannelData(0);
+            const step = Math.ceil(data.length / canvas.width);
+            const amp = canvas.height / 2;
+
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+
+            if (isPlayed === true) {
+                // 재생된 부분: 투명도를 낮춰서 어둡게 표현
+                gradient.addColorStop(0, 'rgba(0, 240, 255, 0.15)');
+                gradient.addColorStop(1, 'rgba(114, 19, 255, 0.15)');
+            } else {
+                // 재생 전 부분: 원래의 선명한 색상
+                gradient.addColorStop(0, '#00f0ff');
+                gradient.addColorStop(1, '#7213ff');
+            }
+
+            ctx.fillStyle = gradient;
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // 기본 그리기를 위해 클리어 추가
+
+            for (let i = 0; i < canvas.width; i++) {
+                let min = 1.0;
+                let max = -1.0;
+                for (let j = 0; j < step; j++) {
+                    const datum = data[(i * step) + j];
+                    if (datum < min) min = datum;
+                    if (datum > max) max = datum;
+                }
+                ctx.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
+            }
+        }
+
+        // --- 재생/일시정지 통합 로직 (btnPlay 이벤트 리스너 교체) ---
+        btnPlay.addEventListener('click', async () => {
+            if (!audioBuffer) return;
+
+            // 1. 처음 시작하는 경우
+            if (!isPlaying && !isPaused) {
+                if (audioContext.state === 'suspended') await audioContext.resume();
+
+                sourceNode = audioContext.createBufferSource();
+                sourceNode.buffer = audioBuffer;
+                sourceNode.connect(audioContext.destination);
+
+                startTime = audioContext.currentTime;
+                sourceNode.start();
+
+                isPlaying = true;
+                updateUI(true);
+                updateProgressBar();
+
+                sourceNode.onended = () => {
+                    if (!isPaused) { // 사용자가 직접 멈춘게 아니라면 초기화
+                        stopAudio();
+                    }
+                };
+            }
+            // 2. 이미 재생 중인데 누른 경우 -> 일시정지
+            else if (isPlaying && !isPaused) {
+                await audioContext.suspend();
+                isPaused = true;
+                updateUI(false);
+            }
+            // 3. 일시정지 상태에서 누른 경우 -> 다시 재생
+            else if (isPaused) {
+                await audioContext.resume();
+                isPaused = false;
+                updateUI(true);
+                updateProgressBar();
+            }
+        });
+
+        // --- UI 업데이트 함수 ---
+        function updateUI(isCurrentlyPlaying) {
+            const icon = document.getElementById('play-icon');
+            if (isCurrentlyPlaying) {
+                icon.textContent = 'pause';
+                btnPlay.classList.add('text-cyan-400', 'border-cyan-400/50');
+            } else {
+                icon.textContent = 'play_arrow';
+                btnPlay.classList.remove('text-cyan-400', 'border-cyan-400/50');
+            }
+        }
+
+        // --- 오디오 완전 정지 함수 (Stop 버튼 및 곡 종료 시 사용) ---
+        function stopAudio() {
+            if (sourceNode) {
+                try { sourceNode.stop(); } catch (e) { }
+            }
+            isPlaying = false;
+            isPaused = false;
+            startTime = 0;
+            if (audioContext && audioContext.state === 'suspended') audioContext.resume();
+            updateUI(false);
+            cancelAnimationFrame(animationId);
+            drawWaveform(audioBuffer);
+        }
+
+        // --- btnStop 이벤트 리스너 수정 ---
+        btnStop.addEventListener('click', stopAudio);
+
+        // --- 재생 바를 그리는 함수 추가 ---
+        function updateProgressBar() {
+            if (!isPlaying || !audioBuffer || isPaused) return;
+
+            const currentTime = audioContext.currentTime - startTime;
+            const progress = currentTime / audioBuffer.duration;
+            const x = progress * canvas.width;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. 배경 파형 그리기 (재생 전/후 색상 대비)
+            // 팁: drawWaveform 내부 로직을 수정하지 않고도 여기서 클리핑으로 제어 가능합니다.
+
+            // [왼쪽: 지나간 영역 - 어둡게]
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(0, 0, x, canvas.height);
+            ctx.clip();
+            drawWaveform(audioBuffer, true);
+            ctx.restore();
+
+            // [오른쪽: 남은 영역 - 밝게]
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(x, 0, canvas.width - x, canvas.height);
+            ctx.clip();
+            drawWaveform(audioBuffer, false);
+            ctx.restore();
+
+            // 2. Fancy 재생선 (Neon Glow 스타일)
+            ctx.save();
+
+            // 외곽 광채(Glow) 효과
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#00f0ff';
+            ctx.strokeStyle = '#00f0ff'; // 네온 블루
+            ctx.lineWidth = 2;
+
+            // 수직선 그리기
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.stroke();
+
+            // 상단 다이아몬드 마커 추가
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x + 4, 6);
+            ctx.lineTo(x, 12);
+            ctx.lineTo(x - 4, 6);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+
+            // 3. 애니메이션 루프
+            if (progress < 1) {
+                animationId = requestAnimationFrame(updateProgressBar);
+            } else {
+                stopAudio(); // 곡이 끝나면 자동으로 정지 로직 호출
+            }
+        }
+
+    </script>
+</body>
+
+</html>
