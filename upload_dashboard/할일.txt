@@ -1,1 +1,4 @@
 waveform 시간 드레그 기능 추가.
+
+speaker mute 기능 추가.
+
