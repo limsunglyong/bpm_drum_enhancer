@@ -1836,6 +1836,10 @@
                         <span class="text-zinc-500 uppercase tracking-widest font-bold">Format</span>
                         <span id="track-format" class="text-zinc-300 font-mono-data">MP3</span>
                     </div>
+                    <div class="flex justify-between items-center text-xs border-b border-zinc-800 pb-2">
+                        <span class="text-zinc-500 uppercase tracking-widest font-bold">Sample Rate</span>
+                        <span id="sample-rate-display" class="text-zinc-300 font-mono-data">--</span>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -1844,7 +1848,7 @@
         <main class="flex-1 p-gutter overflow-y-auto max-w-[1600px] mx-auto w-full flex flex-col gap-gutter">
             <div class="grid grid-cols-12 gap-gutter">
                 <!-- 파형 및 분석 그래프 영역 -->
-                <div class="col-span-12 lg:col-span-8 space-y-gutter">
+                <div class="col-span-12 space-y-gutter">
                     <div class="bg-surface-container rounded-xl border border-zinc-800 p-6 relative overflow-hidden">
                         <div class="flex justify-between items-center mb-6">
                             <h3 id="file-name-display" class="font-h2 text-lg">Neon Nights Analysis</h3>
@@ -1875,39 +1879,13 @@
                         </div>
                     </div>
 
-                    <!-- 하단 보조 그래프 (Variance & LUFS) -->
-                    <div class="grid grid-cols-2 gap-gutter">
-                        <div class="bg-surface-container rounded-xl border border-zinc-800 p-6">
-                            <h4 class="text-[10px] uppercase text-zinc-500 mb-4 font-bold tracking-widest">Stability
-                                Rating</h4>
-                            <p class="text-lg text-secondary font-mono-data">99.2% EXCELLENT</p>
-                        </div>
-                        <div class="bg-surface-container rounded-xl border border-zinc-800 p-6">
-                            <h4 class="text-[10px] uppercase text-zinc-500 mb-4 font-bold tracking-widest">Loudness
-                                (LUFS)</h4>
-                            <p class="text-lg text-error font-mono-data">-1.2 dB</p>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- 파일 메타데이터 및 분석 통계 영역 -->
-                <div class="col-span-12 lg:col-span-4 space-y-gutter">
+                    <!-- Tempo Histogram -->
                     <div class="bg-surface-container rounded-xl border border-zinc-800 p-6">
-                        <h3 class="font-h2 text-sm uppercase tracking-widest text-cyan-400 mb-6">File Metadata</h3>
-                        <div class="space-y-4">
-                            <div class="flex justify-between border-b border-zinc-800 pb-2">
-                                <span class="text-xs text-zinc-500">Duration</span>
-                                <span id="duration-display" class="text-xs font-mono-data">00:00</span>
-                            </div>
-                            <div class="flex justify-between border-b border-zinc-800 pb-2">
-                                <span class="text-xs text-zinc-500">Sample Rate</span>
-                                <span id="sample-rate-display" class="text-xs font-mono-data">44.1 kHz</span>
-                            </div>
+                        <h4 class="text-[10px] uppercase text-zinc-500 mb-4 font-bold tracking-widest">Tempo Histogram</h4>
+                        <div class="h-32 w-full bg-zinc-950/50 rounded-lg border border-zinc-800/50 relative overflow-hidden">
+                            <canvas id="tempo-histogram" class="w-full h-full opacity-90"></canvas>
                         </div>
-                        <button
-                            class="w-full mt-8 bg-cyan-400 text-zinc-950 font-bold py-3 rounded-lg flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:brightness-110 active:scale-95 transition-all">
-                            Proceed to Beat Making <span class="material-symbols-outlined">arrow_forward</span>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -2531,29 +2509,108 @@
 
                 let bpm = 120.00;
                 if (peaks.length >= 2) {
-                    const counts = {};
-                    for (let i = 0; i < peaks.length; i++) {
-                        for (let j = i + 1; j < Math.min(i + 10, peaks.length); j++) {
-                            const interval = peaks[j] - peaks[i];
-                            let theoreticalBPM = 60 / (interval / audioBuffer.sampleRate);
+                    const tempos = [];
+                    for (let i = 1; i < peaks.length; i++) {
+                        const interval = peaks[i] - peaks[i - 1];
+                        let theoreticalBPM = 60 / (interval / audioBuffer.sampleRate);
 
-                            // Normalize BPM to common range [70, 160]
-                            while (theoreticalBPM < 70) theoreticalBPM *= 2;
-                            while (theoreticalBPM > 160) theoreticalBPM /= 2;
+                        // Normalize BPM to common range [70, 160]
+                        while (theoreticalBPM < 70) theoreticalBPM *= 2;
+                        while (theoreticalBPM > 160) theoreticalBPM /= 2;
 
-                            const roundedBPM = Math.round(theoreticalBPM * 10) / 10;
-                            counts[roundedBPM] = (counts[roundedBPM] || 0) + 1;
+                        tempos.push(theoreticalBPM);
+                    }
+
+                    // Histogram bins
+                    const binSize = 1;
+                    const bins = {};
+                    tempos.forEach(t => {
+                        const bin = Math.round(t / binSize) * binSize;
+                        bins[bin] = (bins[bin] || 0) + 1;
+                    });
+                    
+                    let maxCount = 0;
+                    let modeBin = 120;
+                    for (const b in bins) {
+                        if (bins[b] > maxCount) {
+                            maxCount = bins[b];
+                            modeBin = parseFloat(b);
                         }
                     }
 
-                    let maxCount = 0;
-                    for (const b in counts) {
-                        if (counts[b] > maxCount) {
-                            maxCount = counts[b];
-                            bpm = parseFloat(b);
+                    // 최빈값 중심에서 80% 구간의 값들 (상하위 10% 제외)
+                    const cluster = tempos.filter(t => Math.abs(t - modeBin) <= 3);
+                    cluster.sort((a, b) => a - b);
+                    const trimCount = Math.floor(cluster.length * 0.1);
+                    const core = cluster.slice(trimCount, cluster.length - trimCount);
+                    
+                    if (core.length > 0) {
+                        bpm = core.reduce((a, b) => a + b, 0) / core.length;
+                    } else {
+                        bpm = modeBin;
+                    }
+                    
+                    // 히스토그램 그리기
+                    const canvas = document.getElementById('tempo-histogram');
+                    if (canvas) {
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = canvas.offsetWidth;
+                        canvas.height = canvas.offsetHeight;
+                        
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        
+                        const binKeys = Object.keys(bins).map(Number).sort((a,b)=>a-b);
+                        if(binKeys.length > 0) {
+                            const minBin = binKeys[0];
+                            const maxBin = binKeys[binKeys.length - 1];
+                            const paddingX = 20; // 좌우 여백 확보
+                            const paddingYTop = 10;
+                            const paddingYBottom = 25; // X축 라벨을 위한 하단 여백
+                            const drawWidth = canvas.width - paddingX * 2;
+                            const drawHeight = canvas.height - paddingYTop - paddingYBottom;
+                            
+                            const barWidth = drawWidth / Math.max(1, (maxBin - minBin + 1));
+                            
+                            binKeys.forEach(bin => {
+                                const count = bins[bin];
+                                const h = (count / maxCount) * drawHeight;
+                                const x = paddingX + (bin - minBin) * barWidth;
+                                const y = canvas.height - paddingYBottom - h;
+                                
+                                // 최빈값 주변 80% 구간 하이라이트
+                                if (Math.abs(bin - modeBin) <= 3) {
+                                    ctx.fillStyle = '#66ff8f'; // secondary color
+                                } else {
+                                    ctx.fillStyle = '#006970'; // inverse-primary
+                                }
+                                
+                                ctx.fillRect(x, y, Math.max(1, barWidth - 1), h);
+                            });
+
+                            // X축 (BPM) 라벨 그리기
+                            ctx.fillStyle = '#b9cacb'; // on-surface-variant (text color)
+                            ctx.font = '10px Inter, sans-serif';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'top';
+
+                            // 텍스트 겹침 방지를 위한 라벨 간격(step) 계산
+                            // 숫자 하나의 대략적인 픽셀 너비(~25px)를 기준으로 스텝 결정
+                            const labelStep = Math.max(1, Math.ceil(25 / barWidth));
+
+                            for (let i = 0; i <= (maxBin - minBin); i++) {
+                                if (i % labelStep === 0) {
+                                    const bin = minBin + i;
+                                    const x = paddingX + i * barWidth + barWidth / 2;
+                                    const y = canvas.height - paddingYBottom + 6;
+                                    ctx.fillText(Math.round(bin), x, y);
+                                }
+                            }
                         }
                     }
                 }
+
+                // sessionStorage에 저장
+                sessionStorage.setItem('globalTempo', bpm.toFixed(2));
 
                 // Update BPM UI
                 const bpmDisplay = document.getElementById('bpm-display');
