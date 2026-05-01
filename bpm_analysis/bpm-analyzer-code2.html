@@ -19,6 +19,8 @@
         rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <script src="https://unpkg.com/meyda/dist/web/meyda.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/browser-id3-writer@4.4.0/dist/browser-id3-writer.min.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -1865,6 +1867,21 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Export Menu -->
+            <div class="mt-auto pt-6 border-t border-zinc-800">
+                <div class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-3 px-2">Export Selection</div>
+                <div class="flex flex-col gap-1">
+                    <button id="export-drum" class="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-cyan-400/10 hover:text-cyan-400 transition-all group">
+                        <span class="material-symbols-outlined text-[18px]">download</span>
+                        <span class="text-xs font-bold">Drum beat export</span>
+                    </button>
+                    <button id="export-mixed" class="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-cyan-400/10 hover:text-cyan-400 transition-all group">
+                        <span class="material-symbols-outlined text-[18px]">library_music</span>
+                        <span class="text-xs font-bold">Mixing export</span>
+                    </button>
+                </div>
+            </div>
         </aside>
 
         <!-- 3. 메인 분석 영역 -->
@@ -1873,7 +1890,7 @@
                 <!-- 파형 및 분석 그래프 영역 -->
                 <div class="col-span-12 space-y-gutter">
                     <div class="bg-surface-container rounded-xl border border-zinc-800 p-6 relative overflow-hidden">
-                        <div class="flex justify-between items-center mb-6">
+                        <div class="flex justify-between items-center mb-2">
                             <h3 id="file-name-display" class="font-h2 text-lg">Neon Nights Analysis</h3>
                             <div class="flex gap-4">
                                 <div class="text-right">
@@ -1897,12 +1914,17 @@
                             <!-- Playhead Off-screen Indicator (Left) -->
                             <div id="playhead-left-indicator"
                                 class="absolute top-1/2 left-4 -translate-y-1/2 z-20 hidden flex flex-col items-center gap-2 cursor-pointer group/indicator transition-all hover:scale-110 active:scale-95">
-                                <div class="w-10 h-10 bg-cyan-400/20 backdrop-blur-md border border-cyan-400/50 rounded-full flex items-center justify-center animate-pulse shadow-[0_0_15px_rgba(34,211,238,0.4)]">
+                                <div
+                                    class="w-10 h-10 bg-cyan-400/20 backdrop-blur-md border border-cyan-400/50 rounded-full flex items-center justify-center animate-pulse shadow-[0_0_15px_rgba(34,211,238,0.4)]">
                                     <span class="material-symbols-outlined text-cyan-400 text-2xl">arrow_back</span>
                                 </div>
-                                <div class="flex flex-col items-center bg-zinc-900/90 border border-white/10 px-2.5 py-1 rounded shadow-lg backdrop-blur-sm">
-                                    <span class="text-[9px] font-bold text-cyan-400 uppercase tracking-widest leading-tight">Playhead is Left</span>
-                                    <span class="text-[8px] text-zinc-500 uppercase tracking-tighter mt-0.5">Click to follow</span>
+                                <div
+                                    class="flex flex-col items-center bg-zinc-900/90 border border-white/10 px-2.5 py-1 rounded shadow-lg backdrop-blur-sm">
+                                    <span
+                                        class="text-[9px] font-bold text-cyan-400 uppercase tracking-widest leading-tight">Playhead
+                                        is Left</span>
+                                    <span class="text-[8px] text-zinc-500 uppercase tracking-tighter mt-0.5">Click to
+                                        follow</span>
                                 </div>
                             </div>
 
@@ -1911,10 +1933,13 @@
                         </div>
 
                         <!-- Drum Beat Waveform Canvas -->
-                        <div class="mt-4 h-32 bg-zinc-950/50 rounded-lg border border-zinc-800/50 relative overflow-hidden group">
-                            <div class="absolute top-2 left-3 z-10 flex items-center gap-1.5 px-2 py-0.5 bg-zinc-900/80 backdrop-blur-sm border border-white/5 rounded-full pointer-events-none">
-                                <span class="material-symbols-outlined text-[12px] text-secondary font-bold">鼓</span>
-                                <span class="text-[9px] font-bold tracking-widest text-zinc-400 uppercase">Drum Beat Waveform</span>
+                        <div
+                            class="mt-1 h-32 bg-zinc-950/50 rounded-lg border border-zinc-800/50 relative overflow-hidden group">
+                            <div
+                                class="absolute top-2 left-3 z-10 flex items-center gap-1.5 px-2 py-0.5 bg-zinc-900/80 backdrop-blur-sm border border-white/5 rounded-full pointer-events-none">
+                                <span class="material-symbols-outlined text-[12px] text-secondary font-bold">🥁</span>
+                                <span class="text-[9px] font-bold tracking-widest text-zinc-400 uppercase">Drum Beat
+                                    Waveform</span>
                             </div>
                             <canvas id="drum-waveform" class="w-full h-full opacity-80"></canvas>
                         </div>
@@ -1975,13 +2000,34 @@
             <div class="flex items-center gap-3 border-l border-zinc-800 pl-6">
                 <span class="material-symbols-outlined text-zinc-400 text-sm">sync_alt</span>
                 <div class="flex flex-col justify-center">
-                    <div class="text-[10px] text-zinc-500 font-mono-data uppercase tracking-widest leading-none mb-1.5 flex justify-between">
+                    <div
+                        class="text-[10px] text-zinc-500 font-mono-data uppercase tracking-widest leading-none mb-1.5 flex justify-between">
                         <span>Sync</span>
                         <span id="drum-offset-value" class="text-secondary ml-2">0ms</span>
                     </div>
                     <div class="relative flex items-center">
                         <input type="range" id="drum-offset-control" min="-400" max="400" step="10" value="0"
                             class="w-48 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-zinc-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Group Division -->
+            <div class="flex items-center gap-3 border-l border-zinc-800 pl-6">
+                <div class="flex flex-col justify-center">
+                    <div class="text-[10px] text-zinc-500 font-mono-data uppercase tracking-widest leading-none mb-1.5">
+                        Beat Division
+                    </div>
+                    <div class="flex bg-zinc-900/50 p-0.5 rounded-lg border border-zinc-800">
+                        <button id="group-1-1"
+                            class="group-div-btn px-3 py-1 text-[11px] font-bold rounded-md transition-all bg-cyan-500/20 text-cyan-400"
+                            data-division="1/1">1/1</button>
+                        <button id="group-1-2"
+                            class="group-div-btn px-3 py-1 text-[11px] font-bold rounded-md transition-all text-zinc-500 hover:text-zinc-300"
+                            data-division="1/2">1/2</button>
+                        <button id="group-1-4"
+                            class="group-div-btn px-3 py-1 text-[11px] font-bold rounded-md transition-all text-zinc-500 hover:text-zinc-300"
+                            data-division="1/4">1/4</button>
                     </div>
                 </div>
             </div>
@@ -2035,6 +2081,8 @@
         let globalAudioBuffer = null;
         let currentZoom = 1.0;
         let currentOffset = 0; // Starting sample index for horizontal scroll
+        let currentGroupDivision = '1/1'; // '1/1', '1/2', '1/4'
+        let currentTrackTags = null; // Global to store metadata
 
         let audioContext;
         let gainNode;
@@ -2076,9 +2124,9 @@
                 // ID3 태그 스킵
                 if (view.getUint32(0) >>> 8 === 0x494433) { // "ID3"
                     const size = ((view.getUint8(6) & 0x7F) << 21) |
-                                 ((view.getUint8(7) & 0x7F) << 14) |
-                                 ((view.getUint8(8) & 0x7F) << 7) |
-                                 (view.getUint8(9) & 0x7F);
+                        ((view.getUint8(7) & 0x7F) << 14) |
+                        ((view.getUint8(8) & 0x7F) << 7) |
+                        (view.getUint8(9) & 0x7F);
                     offset = size + 10;
                 }
 
@@ -2165,23 +2213,23 @@
             const sampleRate = ctx.sampleRate;
             const duration = 0.1;
             const offlineCtx = new OfflineAudioContext(1, sampleRate * duration, sampleRate);
-            
+
             const osc = offlineCtx.createOscillator();
             const gain = offlineCtx.createGain();
-            
+
             osc.type = 'sine';
             osc.frequency.setValueAtTime(1000, 0); // 고주파 비프음
             osc.frequency.exponentialRampToValueAtTime(10, duration);
-            
+
             gain.gain.setValueAtTime(0.8, 0);
             gain.gain.exponentialRampToValueAtTime(0.01, duration);
-            
+
             osc.connect(gain);
             gain.connect(offlineCtx.destination);
-            
+
             osc.start();
             osc.stop(duration);
-            
+
             return await offlineCtx.startRendering();
         }
 
@@ -2192,23 +2240,23 @@
             const sampleRate = audioBuffer.sampleRate;
             const analyzeDuration = Math.min(audioBuffer.duration, 20); // 처음 20초 분석
             const secondsPerBeat = 60 / bpm;
-            
+
             // 1. 50Hz 로우패스 필터링 (킥 드럼 대역 추출)
             const offlineCtx = new OfflineAudioContext(1, sampleRate * analyzeDuration, sampleRate);
             const source = offlineCtx.createBufferSource();
             source.buffer = audioBuffer;
-            
+
             const lpf = offlineCtx.createBiquadFilter();
             lpf.type = 'lowpass';
             lpf.frequency.setValueAtTime(50, 0);
-            
+
             source.connect(lpf);
             lpf.connect(offlineCtx.destination);
             source.start(0);
-            
+
             const filteredBuffer = await offlineCtx.startRendering();
             const data = filteredBuffer.getChannelData(0);
-            
+
             // 2. 에너지 엔벨로프 계산
             const winSize = Math.floor(sampleRate * 0.01); // 10ms 윈도우
             const envelope = [];
@@ -2219,19 +2267,19 @@
                 }
                 envelope.push(Math.sqrt(rms / winSize));
             }
-            
+
             // 3. 최적의 Phase(시작 시간) 탐색
             // 0 ~ secondsPerBeat 사이의 모든 오프셋에 대해 비트 주기와 일치하는 에너지 합산
             const hopS = 0.01; // envelope의 한 칸은 10ms
             const stepsPerBeat = secondsPerBeat / hopS;
-            
+
             let bestPhase = 0;
             let maxScore = -1;
-            
+
             for (let phaseIdx = 0; phaseIdx < stepsPerBeat; phaseIdx++) {
                 let currentScore = 0;
                 let pulseCount = 0;
-                
+
                 // 해당 phase부터 시작하여 BPM 간격으로 에너지 샘플링
                 for (let step = phaseIdx; step < envelope.length; step += stepsPerBeat) {
                     const idx = Math.floor(step);
@@ -2240,13 +2288,13 @@
                         pulseCount++;
                     }
                 }
-                
+
                 if (currentScore > maxScore) {
                     maxScore = currentScore;
                     bestPhase = phaseIdx * hopS;
                 }
             }
-            
+
             // 4. 맥동이 시작되는 실제 시간 탐색 (Intro 제외)
             // 전체 평균 에너지의 일정 수준 이상이 처음으로 나타나는 비트 지점을 찾음
             const threshold = maxScore / (analyzeDuration / secondsPerBeat) * 0.5;
@@ -2258,7 +2306,7 @@
                     break;
                 }
             }
-            
+
             console.log(`[Sync] Detected BPM: ${bpm}, Phase: ${bestPhase.toFixed(3)}s, Start: ${startTime.toFixed(3)}s`);
             return startTime;
         }
@@ -2266,28 +2314,100 @@
         /**
          * Generates a drum beat AudioBuffer matching the duration of the main audio
          */
-        async function generateDrumBeatBuffer(bpm, duration, sampleRate, phase = 0) {
+        async function generateDrumBeatBuffer(bpm, duration, sampleRate, phase = 0, division = '1/1') {
             if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
+
             const metronome = await createMetronomeBuffer(audioContext);
-            
+
             const drumBuffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
             const drumData = drumBuffer.getChannelData(0);
-            
+
             const secondsPerBeat = 60 / bpm;
             const quarterNote = secondsPerBeat;
-            
-            // phase(첫 번째 비트 오프셋)부터 시작하여 비트 생성
+
+            let beatIdx = 0;
+            // 1. phase(첫 번째 비트 오프셋)부터 시작하여 순방향 비트 생성
             for (let time = phase; time < duration; time += quarterNote) {
                 const startSample = Math.floor(time * sampleRate);
                 const sourceData = metronome.getChannelData(0);
-                
+
+                let volCoeff = 0.7; 
+                const patternIdx = beatIdx % 4;
+
+                if (division === '1/2') {
+                    if (beatIdx % 2 === 1) volCoeff *= 0.25;
+                } else if (division === '1/4') {
+                    if (patternIdx === 1 || patternIdx === 2 || patternIdx === 3) volCoeff *= 0.25;
+                }
+
                 for (let i = 0; i < sourceData.length && (startSample + i) < drumData.length; i++) {
-                    drumData[startSample + i] += sourceData[i] * 0.7; // Mix in
+                    drumData[startSample + i] += sourceData[i] * volCoeff;
+                }
+                beatIdx++;
+            }
+
+            // 2. phase 이전의 영역을 역방향으로 채움 (0초까지)
+            let backTime = phase - quarterNote;
+            let backBeatIdx = -1; 
+            while (backTime >= 0) {
+                const startSample = Math.floor(backTime * sampleRate);
+                const sourceData = metronome.getChannelData(0);
+
+                let volCoeff = 0.7;
+                const patternIdx = (backBeatIdx % 4 + 4) % 4;
+
+                if (division === '1/2') {
+                    if (Math.abs(backBeatIdx % 2) === 1) volCoeff *= 0.25;
+                } else if (division === '1/4') {
+                    if (patternIdx === 1 || patternIdx === 2 || patternIdx === 3) volCoeff *= 0.25;
+                }
+
+                for (let i = 0; i < sourceData.length && (startSample + i) < drumData.length; i++) {
+                    drumData[startSample + i] += sourceData[i] * volCoeff;
+                }
+                
+                backTime -= quarterNote;
+                backBeatIdx--;
+            }
+
+            return drumBuffer;
+        }
+
+        /**
+         * 현재 설정을 바탕으로 드럼 버퍼를 다시 생성하고 재생 중인 경우 즉시 반영합니다.
+         */
+        async function refreshDrumBuffer() {
+            if (!globalAudioBuffer) return;
+
+            const currentBpm = parseFloat(sessionStorage.getItem('globalTempo') || '120');
+            const phase = await findFirstDownbeat(globalAudioBuffer, currentBpm);
+
+            const buffer = await generateDrumBeatBuffer(currentBpm, globalAudioBuffer.duration, globalAudioBuffer.sampleRate, phase, currentGroupDivision);
+            drumAudioBuffer = buffer;
+
+            // 시각화 즉시 반영
+            drawDrumWaveform(isPlaying ? (audioContext.currentTime - startTime) : null);
+
+            // 재생 중이라면 드럼 소스 즉시 교체
+            if (isPlaying) {
+                if (drumSourceNode) {
+                    try { drumSourceNode.stop(); } catch (e) { }
+                }
+                drumSourceNode = audioContext.createBufferSource();
+                drumSourceNode.buffer = drumAudioBuffer;
+                drumSourceNode.connect(drumGainNode);
+
+                const elapsed = audioContext.currentTime - startTime;
+                const drumStartTime = startTime + (drumOffset / 1000); // 원본 시작 시간 기준 오프셋 적용
+
+                // 이미 지난 시간인 경우
+                if (audioContext.currentTime >= drumStartTime) {
+                    const bufferOffset = audioContext.currentTime - drumStartTime;
+                    drumSourceNode.start(audioContext.currentTime, bufferOffset);
+                } else {
+                    drumSourceNode.start(drumStartTime);
                 }
             }
-            
-            return drumBuffer;
         }
 
         function drawDrumWaveform(currentTime = null) {
@@ -2319,14 +2439,14 @@
                     // Apply drumOffset (ms) to sample calculation
                     const offsetSamples = (drumOffset / 1000) * sampleRate;
                     let startSampleIdx = Math.floor(currentOffset + (i * step) - offsetSamples);
-                    
+
                     if (startSampleIdx < 0 || startSampleIdx >= data.length) continue;
-                    
+
                     for (let j = 0; j < Math.ceil(step) && (startSampleIdx + j) < data.length; j++) {
                         const val = Math.abs(data[startSampleIdx + j]);
                         if (val > max) max = val;
                     }
-                    
+
                     const h = Math.max(1, max * amp * 2);
                     const y = centerY - (h / 2);
                     ctx.fillRect(i, y, 1, h);
@@ -2625,6 +2745,7 @@
                     window.jsmediatags.read(file, {
                         onSuccess: function (tag) {
                             const tags = tag.tags;
+                            currentTrackTags = tags; // Store for export
                             if (tags.title) document.getElementById('track-title').textContent = tags.title;
                             else document.getElementById('track-title').textContent = name || 'Unknown Title';
 
@@ -2801,14 +2922,14 @@
                             const currentTime = audioContext.currentTime - startTime;
                             const sampleRate = globalAudioBuffer.sampleRate;
                             const visibleSamples = globalAudioBuffer.length / currentZoom;
-                            
+
                             // Center the playhead
                             currentOffset = (currentTime * sampleRate) - (visibleSamples * 0.5);
-                            
+
                             const maxOffset = globalAudioBuffer.length - visibleSamples;
                             if (currentOffset < 0) currentOffset = 0;
                             if (currentOffset > maxOffset) currentOffset = Math.max(0, maxOffset);
-                            
+
                             drawWaveform(currentTime);
                         }
                     });
@@ -2897,7 +3018,7 @@
                 const allCandidates = [];
                 // 1. 절대 최빈값 (Global Tempo) 추가
                 allCandidates.push({ bpm: bestBpm, correlation: maxCorrelation, isPrimary: true });
-                
+
                 // 2. 다른 국소 최빈값들 중 중복되지 않는 상위 항목 추가
                 topCandidates.forEach(c => {
                     if (!allCandidates.some(a => a.bpm === c.bpm)) {
@@ -2980,53 +3101,29 @@
                         totalWeight += weight;
                     }
                     const refinedBpm = totalWeight > 0 ? weightedSum / totalWeight : targetBpm;
-                    
-                    const bpmDisplay = document.getElementById('bpm-display');
-                    if (bpmDisplay) bpmDisplay.textContent = refinedBpm.toFixed(2);
+                    const roundedBpm = Math.round(refinedBpm);
 
-                    sessionStorage.setItem('globalTempo', refinedBpm.toFixed(2));
+                    const bpmDisplay = document.getElementById('bpm-display');
+                    if (bpmDisplay) {
+                        bpmDisplay.innerHTML = `${roundedBpm}<span style="font-size: 0.6em; font-style: italic; font-weight: normal; color: #71717a; margin-left: 0;">bpm</span>`;
+                    }
+
+                    sessionStorage.setItem('globalTempo', roundedBpm.toString());
 
                     // --- Generate Drum Beat Buffer with Phase Correction ---
                     if (globalAudioBuffer) {
                         const isUpdate = !!drumAudioBuffer;
                         if (!isUpdate) setLoadingMsg('Aligning phase (LPF Kick Detection)...');
-                        
-                        findFirstDownbeat(globalAudioBuffer, refinedBpm).then(phase => {
-                            if (!isUpdate) setLoadingMsg('Generating drum beat...');
-                            generateDrumBeatBuffer(refinedBpm, globalAudioBuffer.duration, globalAudioBuffer.sampleRate, phase)
-                                .then(buffer => {
-                                    drumAudioBuffer = buffer;
-                                    drawDrumWaveform(isPlaying ? (audioContext.currentTime - startTime) : null);
-                                    
-                                    // 재생 중이라면 드럼 소스 즉시 교체
-                                    if (isPlaying) {
-                                        if (drumSourceNode) {
-                                            try { drumSourceNode.stop(); } catch (e) { }
-                                        }
-                                        drumSourceNode = audioContext.createBufferSource();
-                                        drumSourceNode.buffer = drumAudioBuffer;
-                                        drumSourceNode.connect(drumGainNode);
 
-                                        const elapsed = audioContext.currentTime - startTime;
-                                        const drumStartTime = audioContext.currentTime + (drumOffset / 1000);
-                                        
-                                        if (drumStartTime < audioContext.currentTime) {
-                                            const lateStartOffset = audioContext.currentTime - drumStartTime;
-                                            drumSourceNode.start(audioContext.currentTime, elapsed + lateStartOffset);
-                                        } else {
-                                            drumSourceNode.start(drumStartTime, elapsed);
-                                        }
-                                    }
-                                    
-                                    if (!isUpdate) hideOverlay();
-                                });
+                        refreshDrumBuffer().then(() => {
+                            if (!isUpdate) hideOverlay();
                         });
                     }
                     const currentFileId = sessionStorage.getItem('currentFileId') || sessionStorage.getItem('uploadedAudioName');
                     if (currentFileId) {
                         try {
                             const bpmHistory = JSON.parse(localStorage.getItem('bpmHistory') || '{}');
-                            bpmHistory[currentFileId] = refinedBpm.toFixed(2);
+                            bpmHistory[currentFileId] = roundedBpm.toString();
                             localStorage.setItem('bpmHistory', JSON.stringify(bpmHistory));
                         } catch (e) { console.warn('bpmHistory update error:', e); }
                     }
@@ -3045,6 +3142,249 @@
                     });
                 }
 
+                /**
+                 * 오디오 버퍼를 WAV 형식의 Blob으로 변환합니다.
+                 */
+                function bufferToWave(abuffer) {
+                    const numOfChan = abuffer.numberOfChannels;
+                    const length = abuffer.length * numOfChan * 2 + 44;
+                    const buffer = new ArrayBuffer(length);
+                    const view = new DataView(buffer);
+                    const channels = [];
+                    let offset = 0;
+                    let pos = 0;
+
+                    function setUint16(data) {
+                        view.setUint16(pos, data, true);
+                        pos += 2;
+                    }
+                    function setUint32(data) {
+                        view.setUint32(pos, data, true);
+                        pos += 4;
+                    }
+
+                    // RIFF header
+                    setUint32(0x46464952); // "RIFF"
+                    setUint32(length - 8); // file length - 8
+                    setUint32(0x45564157); // "WAVE"
+
+                    // fmt chunk
+                    setUint32(0x20746d66); // "fmt "
+                    setUint32(16);         // chunk length
+                    setUint16(1);          // PCM
+                    setUint16(numOfChan);
+                    setUint32(abuffer.sampleRate);
+                    setUint32(abuffer.sampleRate * 2 * numOfChan);
+                    setUint16(numOfChan * 2);
+                    setUint16(16);
+
+                    // data chunk
+                    setUint32(0x61746164); // "data"
+                    setUint32(length - pos - 4);
+
+                    for (let i = 0; i < numOfChan; i++) {
+                        channels.push(abuffer.getChannelData(i));
+                    }
+
+                    const samplesPerChannel = abuffer.length;
+                    for (let s = 0; s < samplesPerChannel; s++) {
+                        for (let c = 0; c < numOfChan; c++) {
+                            let sample = Math.max(-1, Math.min(1, channels[c][s]));
+                            sample = sample < 0 ? sample * 32768 : sample * 32767;
+                            view.setInt16(pos, sample, true);
+                            pos += 2;
+                        }
+                    }
+
+                    return new Blob([buffer], { type: "audio/wav" });
+                }
+
+                /**
+                 * AudioBuffer를 MP3 형식으로 인코딩합니다 (lamejs 사용).
+                 */
+                function bufferToMp3(audioBuffer, bitrate = 192) {
+                    const channels = audioBuffer.numberOfChannels;
+                    const sampleRate = audioBuffer.sampleRate;
+                    // lamejs.Mp3Encoder(channels, sampleRate, bitrate)
+                    const mp3encoder = new lamejs.Mp3Encoder(channels, sampleRate, bitrate);
+                    const mp3Data = [];
+
+                    const leftData = audioBuffer.getChannelData(0);
+                    const rightData = channels > 1 ? audioBuffer.getChannelData(1) : null;
+                    const sampleBlockSize = 1152; // LAME standard block size
+
+                    for (let i = 0; i < audioBuffer.length; i += sampleBlockSize) {
+                        const leftChunk = leftData.subarray(i, i + sampleBlockSize);
+                        const leftInt16 = new Int16Array(leftChunk.length);
+                        for (let j = 0; j < leftChunk.length; j++) {
+                            const s = Math.max(-1, Math.min(1, leftChunk[j]));
+                            leftInt16[j] = s < 0 ? s * 32768 : s * 32767;
+                        }
+
+                        let mp3buf;
+                        if (channels === 2 && rightData) {
+                            const rightChunk = rightData.subarray(i, i + sampleBlockSize);
+                            const rightInt16 = new Int16Array(rightChunk.length);
+                            for (let j = 0; j < rightChunk.length; j++) {
+                                const s = Math.max(-1, Math.min(1, rightChunk[j]));
+                                rightInt16[j] = s < 0 ? s * 32768 : s * 32767;
+                            }
+                            mp3buf = mp3encoder.encodeBuffer(leftInt16, rightInt16);
+                        } else {
+                            mp3buf = mp3encoder.encodeBuffer(leftInt16);
+                        }
+
+                        if (mp3buf.length > 0) {
+                            mp3Data.push(new Uint8Array(mp3buf));
+                        }
+                    }
+
+                    const endBuf = mp3encoder.flush();
+                    if (endBuf.length > 0) {
+                        mp3Data.push(new Uint8Array(endBuf));
+                    }
+
+                    return new Blob(mp3Data, { type: "audio/mp3" });
+                }
+
+                /**
+                 * 현재 버퍼와 설정을 기반으로 오디오를 내보냅니다.
+                 */
+                async function exportAudio(isMixed) {
+                    if (!globalAudioBuffer || !drumAudioBuffer) {
+                        alert('Please analyze audio first.');
+                        return;
+                    }
+
+                    const originalFileName = (sessionStorage.getItem('uploadedAudioName') || 'audio').replace(/\.[^/.]+$/, "");
+                    const suffix = isMixed ? '-mixed' : '-drum';
+                    const fullFileName = `${originalFileName}${suffix}.mp3`;
+
+                    // 오버레이 메시지 설정
+                    const loadingMsg = document.getElementById('loading-message');
+                    if (loadingMsg) loadingMsg.textContent = isMixed ? 'Mixing and Exporting...' : 'Exporting Drum Beat...';
+                    
+                    const overlay = document.getElementById('loading-overlay');
+                    if (overlay) {
+                        overlay.classList.remove('hidden');
+                        overlay.style.opacity = '1';
+                    }
+
+                    try {
+                        const duration = globalAudioBuffer.duration;
+                        // 최적화 설정: 44.1kHz 강제 지정
+                        const exportSampleRate = 44100;
+                        const offlineCtx = new OfflineAudioContext(2, Math.floor(exportSampleRate * duration), exportSampleRate);
+
+                        // 볼륨 설정 가져오기
+                        const volControl = document.getElementById('volume-control');
+                        const masterVol = volControl ? parseFloat(volControl.value) : 1.0;
+                        const drumMixControl = document.getElementById('drum-mix-control');
+                        const drumVol = drumMixControl ? parseFloat(drumMixControl.value) : 0.7;
+
+                        // 1. 원본 오디오 (Mixed 모드인 경우만, Master Gain 적용)
+                        if (isMixed) {
+                            const mainSource = offlineCtx.createBufferSource();
+                            mainSource.buffer = globalAudioBuffer;
+                            const mainGain = offlineCtx.createGain();
+                            mainGain.gain.value = masterVol;
+                            mainSource.connect(mainGain);
+                            mainGain.connect(offlineCtx.destination);
+                            mainSource.start(0);
+                        }
+
+                        // 2. 드럼 비트 (Drum Gain 적용)
+                        const drumSource = offlineCtx.createBufferSource();
+                        drumSource.buffer = drumAudioBuffer;
+                        const drumGain = offlineCtx.createGain();
+                        drumGain.gain.value = drumVol;
+                        drumSource.connect(drumGain);
+                        drumGain.connect(offlineCtx.destination);
+
+                        // Drum Sync Offset 적용
+                        const offsetSec = (drumOffset / 1000);
+                        if (offsetSec >= 0) {
+                            drumSource.start(offsetSec);
+                        } else {
+                            drumSource.start(0, -offsetSec);
+                        }
+
+                        const renderedBuffer = await offlineCtx.startRendering();
+
+                        // --- Normalization (정규화) 로직 ---
+                        let maxAmp = 0;
+                        for (let c = 0; c < renderedBuffer.numberOfChannels; c++) {
+                            const data = renderedBuffer.getChannelData(c);
+                            for (let i = 0; i < data.length; i++) {
+                                const abs = Math.abs(data[i]);
+                                if (abs > maxAmp) maxAmp = abs;
+                            }
+                        }
+
+                        // 0dB (약 0.99)를 기준으로 전체 볼륨 정규화 수행
+                        if (maxAmp > 0) {
+                            const scale = 0.99 / maxAmp;
+                            for (let c = 0; c < renderedBuffer.numberOfChannels; c++) {
+                                const data = renderedBuffer.getChannelData(c);
+                                for (let i = 0; i < data.length; i++) {
+                                    data[i] *= scale;
+                                }
+                            }
+                        }
+
+                        // 최적화 설정: 192kbps MP3 인코딩
+                        const mp3Blob = bufferToMp3(renderedBuffer, 192);
+
+                        // --- ID3 메타데이터 기록 (browser-id3-writer) ---
+                        const mp3Buffer = await mp3Blob.arrayBuffer();
+                        const writer = new ID3Writer(mp3Buffer);
+
+                        if (isMixed) {
+                            // Mixing export: 기존 메타데이터 유지 + 타이틀 뒤에 'mixed' 추가
+                            const originalTitle = currentTrackTags?.title || originalFileName;
+                            const originalArtist = currentTrackTags?.artist || 'Unknown Artist';
+                            const originalAlbum = currentTrackTags?.album || 'Unknown Album';
+
+                            writer.setFrame('TIT2', `${originalTitle} mixed`)
+                                  .setFrame('TPE1', [originalArtist])
+                                  .setFrame('TALB', originalAlbum);
+                            
+                            // 앨범 아트 유지 (있는 경우)
+                            if (currentTrackTags?.picture) {
+                                writer.setFrame('APIC', {
+                                    type: 3,
+                                    data: new Uint8Array(currentTrackTags.picture.data),
+                                    description: 'Album Art',
+                                    mime: currentTrackTags.picture.format
+                                });
+                            }
+                        } else {
+                            // Drum beat export: Artist 필드에 BPM 기록 (예: 120BPM)
+                            const currentBpm = sessionStorage.getItem('globalTempo') || '--';
+                            writer.setFrame('TIT2', `${originalFileName} Drum`)
+                                  .setFrame('TPE1', [`${currentBpm}BPM`]);
+                        }
+
+                        writer.addTag();
+                        const taggedBlob = writer.getBlob();
+                        const url = URL.createObjectURL(taggedBlob);
+
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = fullFileName;
+                        link.click();
+                        setTimeout(() => URL.revokeObjectURL(url), 1000);
+                    } catch (e) {
+                        console.error('Export error:', e);
+                        alert('Export failed: ' + e.message);
+                    } finally {
+                        if (overlay) {
+                            overlay.style.opacity = '0';
+                            setTimeout(() => overlay.classList.add('hidden'), 500);
+                        }
+                    }
+                }
+
                 // --- 히스토그램 마우스 인터랙션 ---
                 if (tempoCanvas) {
                     tempoCanvas.addEventListener('mousemove', (e) => {
@@ -3061,7 +3401,7 @@
 
                         const bpmUnderMouse = Math.round(((x - paddingX) / barWidth) + minBin);
                         const hoveredCandidate = finalCandidates.find(c => Math.abs(c.bpm - bpmUnderMouse) <= 2);
-                        
+
                         const currentGlobal = parseFloat(sessionStorage.getItem('globalTempo') || bestBpm);
 
                         if (hoveredCandidate) {
@@ -3092,7 +3432,7 @@
 
                         const bpmUnderMouse = Math.round(((x - paddingX) / barWidth) + minBin);
                         const clickedCandidate = finalCandidates.find(c => Math.abs(c.bpm - bpmUnderMouse) <= 2);
-                        
+
                         if (clickedCandidate) {
                             applySelectedBpm(clickedCandidate.bpm);
                         }
@@ -3100,7 +3440,7 @@
                 }
 
                 if (candidatesContainer) {
-                    candidatesContainer.innerHTML = '<span class="text-zinc-500 mr-2">CANDIDATE BPMS:</span>';
+                    candidatesContainer.innerHTML = '<span class="text-zinc-500 mr-2 uppercase">CANDIDATE BPMS Probability:</span>';
                     finalCandidates.forEach((c) => {
                         const strength = maxCorrelation > 0 ? ((c.correlation / maxCorrelation) * 100).toFixed(1) : 0;
                         const span = document.createElement('span');
@@ -3145,7 +3485,7 @@
                             // 정밀 동기화를 위한 스케줄링 (0.05초 여유)
                             const scheduleTime = audioContext.currentTime + 0.05;
                             sourceNode.start(scheduleTime);
-                            
+
                             if (drumSourceNode) {
                                 // Apply drumOffset (ms) to start time
                                 const drumStartTime = scheduleTime + (drumOffset / 1000);
@@ -3157,7 +3497,7 @@
                                     drumSourceNode.start(drumStartTime);
                                 }
                             }
-                            
+
                             startTime = scheduleTime;
 
                             isPlaying = true;
@@ -3192,6 +3532,26 @@
                     });
                 }
 
+                // --- Group Division Event Listeners ---
+                const groupBtns = document.querySelectorAll('.group-div-btn');
+                groupBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const div = btn.dataset.division;
+                        currentGroupDivision = div;
+
+                        // UI 업데이트
+                        groupBtns.forEach(b => {
+                            b.classList.remove('bg-cyan-500/20', 'text-cyan-400');
+                            b.classList.add('text-zinc-500', 'hover:text-zinc-300');
+                        });
+                        btn.classList.add('bg-cyan-500/20', 'text-cyan-400');
+                        btn.classList.remove('text-zinc-500', 'hover:text-zinc-300');
+
+                        // 드럼 버퍼 갱신
+                        refreshDrumBuffer();
+                    });
+                });
+
                 if (volControl) {
                     volControl.addEventListener('input', (e) => {
                         if (gainNode) {
@@ -3220,17 +3580,28 @@
                     drumOffsetControl.addEventListener('input', (e) => {
                         drumOffset = parseInt(e.target.value);
                         if (drumOffsetValue) drumOffsetValue.textContent = `${drumOffset}ms`;
-                        
+
                         // Update slider background
                         const value = (e.target.value - e.target.min) / (e.target.max - e.target.min) * 100;
                         e.target.style.background = `linear-gradient(to right, #66ff8f 0%, #66ff8f ${value}%, #272a2c ${value}%, #272a2c 100%)`;
-                        
+
                         // Immediate visualization update
                         drawDrumWaveform(isPlaying ? (audioContext.currentTime - startTime) : null);
                     });
                     // Initial set
                     const value = (drumOffsetControl.value - drumOffsetControl.min) / (drumOffsetControl.max - drumOffsetControl.min) * 100;
                     drumOffsetControl.style.background = `linear-gradient(to right, #66ff8f 0%, #66ff8f ${value}%, #272a2c ${value}%, #272a2c 100%)`;
+                }
+
+                // --- Export Buttons Event Listeners ---
+                const btnExportDrum = document.getElementById('export-drum');
+                const btnExportMixed = document.getElementById('export-mixed');
+
+                if (btnExportDrum) {
+                    btnExportDrum.addEventListener('click', () => exportAudio(false));
+                }
+                if (btnExportMixed) {
+                    btnExportMixed.addEventListener('click', () => exportAudio(true));
                 }
             } catch (error) {
                 console.error('Error fetching or analyzing audio:', error);
