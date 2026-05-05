@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>FD-Studio</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <link
@@ -135,8 +136,8 @@
                 class="w-10 h-10 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(0,240,255,0.3)]">
                 <span class="material-symbols-outlined text-zinc-950 font-bold">equalizer</span>
             </div>
-            <h1 class="font-h2 text-xl tracking-tighter italic text-zinc-100">Focustone <span
-                    class="text-cyan-400">DAW</span></h1>
+            <h1 class="font-h2 text-xl tracking-tighter italic text-zinc-100 flex items-baseline gap-1">Focustone <span
+                    class="text-cyan-400">DAW</span><span class="text-zinc-500 text-xs not-italic ml-1">v0.9.0</span></h1>
             </h1>
         </div>
         <nav class="hidden md:flex items-center gap-8 font-['Space_Grotesk'] tracking-tight">
@@ -244,7 +245,7 @@
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <span class="text-white/[0.04] select-none whitespace-nowrap"
                             style="font-family: 'Ballet', cursive; font-variation-settings: 'opsz' 72; font-size: 6vw; text-transform: none; transform: translateY(0%);">
-                            Focustone
+                            Focustone DAW
                         </span>
                     </div>
 
@@ -346,6 +347,7 @@
     </footer>
 
     <script>
+        const APP_VERSION = 'v0.9.0';
         let audioContext;
         let audioBuffer;
         let sourceNode;
