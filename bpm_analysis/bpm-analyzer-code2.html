@@ -152,6 +152,43 @@
             /* 숫자가 변해도 너비가 고정되도록 설정하여 시각적 떨림을 방지합니다 */
             font-variant-numeric: tabular-nums;
         }
+
+        /* Fancy Loader Styles */
+        @keyframes scan {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        
+        .scanner-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00f0ff, transparent);
+            box-shadow: 0 0 15px #00f0ff;
+            z-index: 101;
+            animation: scan 3s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate-ccw {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+
+        .fancy-spinner-inner {
+            animation: rotate-ccw 2s linear infinite;
+        }
+
+        .glass-card {
+            background: rgba(19, 19, 21, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8),
+                        inset 0 0 32px rgba(0, 240, 255, 0.05);
+        }
     </style>
     <style>
         *,
@@ -2410,6 +2447,9 @@
         async function refreshDrumBuffer(forcedPhase = null) {
             if (!globalAudioBuffer) return;
 
+            // 분석 작업 전에 UI가 업데이트될 수 있도록 양보
+            await new Promise(resolve => setTimeout(resolve, 50));
+
             const currentBpm = parseFloat(sessionStorage.getItem('globalTempo') || '120');
             const phase = forcedPhase !== null ? forcedPhase : await findFirstDownbeat(globalAudioBuffer, currentBpm);
 
@@ -2721,34 +2761,8 @@
         }
 
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            // 볼륨 슬라이더 상태 동기화
-            const volControl = document.getElementById('volume-control');
-            if (volControl) {
-                const savedVolume = localStorage.getItem('masterVolume');
-                if (savedVolume !== null) {
-                    volControl.value = savedVolume;
-                }
-                const updateSliderBg = (slider) => {
-                    const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
-                    slider.style.background = `linear-gradient(to right, #00f0ff 0%, #00f0ff ${value}%, #272a2c ${value}%, #272a2c 100%)`;
-                };
-                updateSliderBg(volControl);
-                volControl.addEventListener('input', (e) => {
-                    localStorage.setItem('masterVolume', e.target.value);
-                    updateSliderBg(e.target);
-                });
-            }
-
-            const name = sessionStorage.getItem('uploadedAudioName');
-
-            // Update UI with file name
-            const fileNameDisplay = document.getElementById('file-name-display');
-            if (fileNameDisplay && name) {
-                fileNameDisplay.textContent = name;
-            }
-
-            // --- 오버레이 헬퍼 (스코프 및 전역 노출) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- 오버레이 헬퍼 (최상단 정의) ---
             function setLoadingMsg(msg) {
                 const loadingMsg = document.getElementById('loading-message');
                 if (loadingMsg) loadingMsg.textContent = msg;
@@ -2772,7 +2786,40 @@
             window.hideOverlay = hideOverlay;
             window.setLoadingMsg = setLoadingMsg;
 
-            try {
+            // 즉시 로딩 오버레이 노출
+            showOverlay('Initializing BPM Analyzer...');
+
+            // 메인 비동기 실행 루프
+            (async () => {
+                // 상위 스코프에서 변수 통합 관리 (중복 선언 방지)
+                let volControl, drumMixControl, canvas, drumCanvas, btnPlay;
+
+                try {
+                    // 볼륨 슬라이더 상태 동기화
+                    volControl = document.getElementById('volume-control');
+                    if (volControl) {
+                    const savedVolume = localStorage.getItem('masterVolume');
+                    if (savedVolume !== null) {
+                        volControl.value = savedVolume;
+                    }
+                    const updateSliderBg = (slider) => {
+                        const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+                        slider.style.background = `linear-gradient(to right, #00f0ff 0%, #00f0ff ${value}%, #272a2c ${value}%, #272a2c 100%)`;
+                    };
+                    updateSliderBg(volControl);
+                    volControl.addEventListener('input', (e) => {
+                        localStorage.setItem('masterVolume', e.target.value);
+                        updateSliderBg(e.target);
+                    });
+                }
+
+                const name = sessionStorage.getItem('uploadedAudioName');
+
+                // Update UI with file name
+                const fileNameDisplay = document.getElementById('file-name-display');
+                if (fileNameDisplay && name) {
+                    fileNameDisplay.textContent = name;
+                }
                 // Fetch the File from IndexedDB
                 setLoadingMsg('Loading audio file...');
                 const file = await audioDB.load();
@@ -2859,13 +2906,13 @@
                 if (!gainNode) {
                     gainNode = audioContext.createGain();
                     gainNode.connect(audioContext.destination);
-                    const volControl = document.getElementById('volume-control');
+                    volControl = document.getElementById('volume-control');
                     if (volControl) gainNode.gain.value = volControl.value;
                 }
                 if (!drumGainNode) {
                     drumGainNode = audioContext.createGain();
                     drumGainNode.connect(audioContext.destination);
-                    const drumMixControl = document.getElementById('drum-mix-control');
+                    drumMixControl = document.getElementById('drum-mix-control');
                     if (drumMixControl) drumGainNode.gain.value = drumMixControl.value;
                 }
 
@@ -2875,8 +2922,8 @@
                     timelineDisp.textContent = `00:00 / ${formatTime(audioBuffer.duration)}`;
                 }
 
-                const canvas = document.getElementById('analysis-waveform');
-                const drumCanvas = document.getElementById('drum-waveform');
+                canvas = document.getElementById('analysis-waveform');
+                drumCanvas = document.getElementById('drum-waveform');
 
                 const syncEvents = (targetCanvas) => {
                     if (!targetCanvas) return;
@@ -2983,9 +3030,9 @@
                     bpmDisplay.textContent = '...';
                 }
 
-                // UI가 업데이트 될 수 있도록 비동기 양보
+                // 분석 작업(findFirstDownbeat 등)을 실행하기 전에 브라우저가 화면을 그릴 수 있도록 양보
                 setLoadingMsg('Analyzing tempo (BPM)...');
-                await new Promise(resolve => setTimeout(resolve, 10));
+                await new Promise(resolve => setTimeout(resolve, 50));
 
                 // We analyze a segment from the audio to speed up processing
                 const analyzeDuration = Math.min(audioBuffer.duration, 30);
@@ -3134,7 +3181,7 @@
                 /**
                  * 선택된 BPM을 기준으로 가중 평균을 계산하고 UI/Storage를 업데이트함
                  */
-                function applySelectedBpm(targetBpm) {
+                async function applySelectedBpm(targetBpm) {
                     let weightedSum = 0;
                     let totalWeight = 0;
                     for (let b = targetBpm - 3; b <= targetBpm + 3; b++) {
@@ -3157,9 +3204,7 @@
                         const isUpdate = !!drumAudioBuffer;
                         if (!isUpdate) setLoadingMsg('Aligning phase (LPF Kick Detection)...');
 
-                        refreshDrumBuffer().then(() => {
-                            if (!isUpdate) hideOverlay();
-                        });
+                        await refreshDrumBuffer();
                     }
                     const currentFileId = sessionStorage.getItem('currentFileId') || sessionStorage.getItem('uploadedAudioName');
                     if (currentFileId) {
@@ -3319,9 +3364,9 @@
                         const offlineCtx = new OfflineAudioContext(2, Math.floor(exportSampleRate * duration), exportSampleRate);
 
                         // 볼륨 설정 가져오기
-                        const volControl = document.getElementById('volume-control');
+                        volControl = document.getElementById('volume-control');
                         const masterVol = volControl ? parseFloat(volControl.value) : 1.0;
-                        const drumMixControl = document.getElementById('drum-mix-control');
+                        drumMixControl = document.getElementById('drum-mix-control');
                         const drumVol = drumMixControl ? parseFloat(drumMixControl.value) : 0.7;
 
                         // 1. 원본 오디오 (Mixed 모드인 경우만, Master Gain 적용)
@@ -3496,9 +3541,7 @@
                     });
                 }
 
-                applySelectedBpm(bestBpm);
-
-                window.hideOverlay();
+                await applySelectedBpm(bestBpm);
 
                 // --- BPM Manual Control & Regeneration Logic ---
                 const btnBpmUp = document.getElementById('bpm-up');
@@ -3743,9 +3786,9 @@
                 }
 
                 // --- Playback Event Listeners ---
-                const btnPlay = document.getElementById('btn-play');
+                btnPlay = document.getElementById('btn-play');
                 const btnStop = document.getElementById('btn-stop');
-                const volControl = document.getElementById('volume-control');
+                volControl = document.getElementById('volume-control');
 
                 if (btnPlay) {
                     btnPlay.addEventListener('click', async () => {
@@ -3844,7 +3887,7 @@
                     });
                 }
 
-                const drumMixControl = document.getElementById('drum-mix-control');
+                drumMixControl = document.getElementById('drum-mix-control');
                 if (drumMixControl) {
                     drumMixControl.addEventListener('input', (e) => {
                         if (drumGainNode) {
@@ -3887,20 +3930,46 @@
                 if (btnExportMixed) {
                     btnExportMixed.addEventListener('click', () => exportAudio(true));
                 }
-            } catch (error) {
-                console.error('Error fetching or analyzing audio:', error);
-                hideOverlay();
-            }
+                } catch (error) {
+                    console.error('Initialization error:', error);
+                    alert('Initialization failed: ' + error.message);
+                } finally {
+                    // 모든 과정 완료 후 오버레이 해제
+                    hideOverlay();
+                }
+            })();
         });
     </script>
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md hidden opacity-0 transition-opacity duration-500">
-        <div class="flex flex-col items-center">
-            <div class="relative w-24 h-24 mb-6">
-                <div class="absolute inset-0 border-4 border-cyan-500/20 rounded-full"></div>
-                <div class="absolute inset-0 border-4 border-cyan-400 rounded-full border-t-transparent animate-spin"></div>
+    <div id="loading-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-all duration-700">
+        <div class="scanner-line"></div>
+        <div class="glass-card p-12 rounded-[2rem] flex flex-col items-center relative overflow-hidden group">
+            <!-- Animated Background Glow -->
+            <div class="absolute -top-24 -left-24 w-48 h-48 bg-cyan-500/10 blur-[100px] rounded-full"></div>
+            <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-emerald-500/10 blur-[100px] rounded-full"></div>
+            
+            <div class="relative w-32 h-32 mb-10">
+                <!-- Outer Ring -->
+                <div class="absolute inset-0 border-[3px] border-cyan-500/10 rounded-full"></div>
+                <div class="absolute inset-0 border-[3px] border-cyan-400 rounded-full border-t-transparent animate-[spin_3s_linear_infinite]"></div>
+                
+                <!-- Inner Ring -->
+                <div class="absolute inset-4 border-[2px] border-emerald-500/20 rounded-full border-dashed"></div>
+                <div class="absolute inset-4 border-[2px] border-emerald-400 rounded-full border-b-transparent fancy-spinner-inner"></div>
+                
+                <!-- Center Core -->
+                <div class="absolute inset-[42%] bg-cyan-400 rounded-sm rotate-45 animate-pulse shadow-[0_0_20px_rgba(0,240,255,0.8)]"></div>
             </div>
-            <p id="loading-message" class="text-cyan-400 font-mono-data text-sm uppercase tracking-[0.3em] animate-pulse">Analyzing Audio Spectrum...</p>
+            
+            <div class="flex flex-col items-center space-y-3">
+                <h3 class="text-white font-mono-data text-xs uppercase tracking-[0.5em] opacity-50">System Processing</h3>
+                <p id="loading-message" class="text-cyan-400 font-mono-data text-lg font-bold uppercase tracking-[0.2em] drop-shadow-[0_0_10px_rgba(0,240,255,0.3)]">Analyzing Audio Spectrum</p>
+                <div class="flex space-x-1">
+                    <div class="w-1 h-1 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                    <div class="w-1 h-1 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div class="w-1 h-1 bg-cyan-400 rounded-full animate-bounce"></div>
+                </div>
+            </div>
         </div>
     </div>
 
