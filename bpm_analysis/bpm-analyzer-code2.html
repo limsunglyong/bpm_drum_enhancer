@@ -1792,28 +1792,6 @@
 
 <body class="bg-surface-dim text-on-surface flex flex-col min-h-screen">
 
-    <!-- Loading Overlay -->
-    <div id="loading-overlay"
-        class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-zinc-950/80 backdrop-blur-md transition-opacity duration-500">
-        <!-- Neon spinner -->
-        <div class="relative w-20 h-20 mb-6">
-            <div class="absolute inset-0 rounded-full border-4 border-zinc-700"></div>
-            <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-cyan-400 animate-spin"
-                style="animation-duration:0.9s"></div>
-            <div class="absolute inset-0 rounded-full border-4 border-transparent border-b-secondary animate-spin"
-                style="animation-duration:1.4s;animation-direction:reverse"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <span class="material-symbols-outlined text-cyan-400 text-2xl"
-                    style="filter:drop-shadow(0 0 6px #22d3ee)">graphic_eq</span>
-            </div>
-        </div>
-        <!-- Status message -->
-        <p id="loading-message"
-            class="font-['Space_Grotesk'] text-sm text-cyan-400 tracking-widest uppercase animate-pulse"
-            style="text-shadow:0 0 8px rgba(34,211,238,0.8)">Initializing...</p>
-        <p class="mt-2 text-zinc-600 text-xs tracking-widest uppercase">BPM Analyzer</p>
-    </div>
-
     <!-- 1. 헤더 (main-code-v5와 동일) -->
     <header
         class="h-16 border-b border-zinc-800 flex items-center justify-between px-8 bg-surface-dim/80 backdrop-blur-md sticky top-0 z-50">
@@ -1894,9 +1872,25 @@
                         <div class="flex justify-between items-center mb-2">
                             <h3 id="file-name-display" class="font-h2 text-lg">Neon Nights Analysis</h3>
                             <div class="flex gap-4">
-                                <div class="text-right">
-                                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest">Global Tempo</p>
-                                    <p id="bpm-display" class="text-2xl font-mono-data text-cyan-400">--</p>
+                                <div class="flex items-center gap-6">
+                                    <div class="text-right">
+                                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest">Global Tempo</p>
+                                        <div class="flex items-center gap-2">
+                                            <p id="bpm-display" class="text-2xl font-mono-data text-cyan-400">--</p>
+                                            <div class="flex flex-col -space-y-1">
+                                                <button id="bpm-up" class="text-zinc-500 hover:text-cyan-400 transition-colors flex items-center justify-center h-4 w-4" title="BPM Up">
+                                                    <span class="material-symbols-outlined text-[18px]">keyboard_arrow_up</span>
+                                                </button>
+                                                <button id="bpm-down" class="text-zinc-500 hover:text-cyan-400 transition-colors flex items-center justify-center h-4 w-4" title="BPM Down">
+                                                    <span class="material-symbols-outlined text-[18px]">keyboard_arrow_down</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button id="generate-drum-btn" disabled class="px-4 py-2 bg-zinc-800 text-zinc-500 border border-zinc-700 rounded-lg text-xs font-bold transition-all flex items-center gap-2 group opacity-50 cursor-not-allowed">
+                                        <span class="material-symbols-outlined text-[18px] group-hover:rotate-180 transition-transform duration-500">sync</span>
+                                        Generate Drum Beat
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1959,6 +1953,41 @@
                         <div
                             class="h-32 w-full bg-zinc-950/50 rounded-lg border border-zinc-800/50 relative overflow-hidden">
                             <canvas id="tempo-histogram" class="w-full h-full opacity-90"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Tap Tempo Section -->
+                    <div class="bg-surface-container rounded-xl border border-zinc-800 p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h4 class="text-[10px] uppercase text-zinc-500 font-bold tracking-widest">Tap Tempo Detection</h4>
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-2 mr-2">
+                                    <span id="tap-rec-status" class="text-[10px] font-bold text-error uppercase tracking-widest animate-pulse hidden">REC</span>
+                                    <button id="tap-rec-btn" class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-error transition-all active:scale-90 group" title="Start Playback & Record Taps">
+                                        <span class="material-symbols-outlined text-[18px] group-[.recording]:text-error">fiber_manual_record</span>
+                                    </button>
+                                    <button id="tap-stop-btn" class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-white transition-all active:scale-90" title="Stop Playback & Recording">
+                                        <span class="material-symbols-outlined text-[18px]">stop</span>
+                                    </button>
+                                </div>
+                                <button id="tap-apply-btn" class="px-3 py-1.5 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-500/20 transition-all active:scale-95" title="Apply Tapped BPM">
+                                    Apply
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-12">
+                            <!-- Big BPM Display -->
+                            <div class="flex flex-col items-center justify-center min-w-[140px] py-4 bg-zinc-950/30 rounded-xl border border-zinc-800/50">
+                                <span class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Measured BPM</span>
+                                <div id="tap-bpm-display" class="text-5xl font-mono-data text-zinc-700 transition-colors">---</div>
+                            </div>
+
+                            <!-- Big Tap Button -->
+                            <button id="tap-action-btn" class="flex-1 h-32 bg-zinc-900 border-2 border-zinc-800 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-zinc-800 hover:border-cyan-400/50 transition-all active:bg-cyan-400/10 group shadow-lg">
+                                <span class="material-symbols-outlined text-4xl text-zinc-600 group-hover:text-cyan-400 transition-colors">touch_app</span>
+                                <span class="text-[10px] font-bold uppercase tracking-[0.1em] text-zinc-500 group-hover:text-cyan-400 transition-colors">TAP (Mouse left click / Space Key)</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -2378,11 +2407,11 @@
         /**
          * 현재 설정을 바탕으로 드럼 버퍼를 다시 생성하고 재생 중인 경우 즉시 반영합니다.
          */
-        async function refreshDrumBuffer() {
+        async function refreshDrumBuffer(forcedPhase = null) {
             if (!globalAudioBuffer) return;
 
             const currentBpm = parseFloat(sessionStorage.getItem('globalTempo') || '120');
-            const phase = await findFirstDownbeat(globalAudioBuffer, currentBpm);
+            const phase = forcedPhase !== null ? forcedPhase : await findFirstDownbeat(globalAudioBuffer, currentBpm);
 
             const buffer = await generateDrumBeatBuffer(currentBpm, globalAudioBuffer.duration, globalAudioBuffer.sampleRate, phase, currentGroupDivision);
             drumAudioBuffer = buffer;
@@ -2719,18 +2748,29 @@
                 fileNameDisplay.textContent = name;
             }
 
-            // --- 오버레이 헬퍼 ---
-            const overlay = document.getElementById('loading-overlay');
-            const loadingMsg = document.getElementById('loading-message');
+            // --- 오버레이 헬퍼 (스코프 및 전역 노출) ---
             function setLoadingMsg(msg) {
+                const loadingMsg = document.getElementById('loading-message');
                 if (loadingMsg) loadingMsg.textContent = msg;
             }
+            function showOverlay(msg) {
+                const overlay = document.getElementById('loading-overlay');
+                if (overlay) {
+                    if (msg) setLoadingMsg(msg);
+                    overlay.classList.remove('hidden');
+                    overlay.style.opacity = '1';
+                }
+            }
             function hideOverlay() {
+                const overlay = document.getElementById('loading-overlay');
                 if (overlay) {
                     overlay.style.opacity = '0';
                     setTimeout(() => overlay.classList.add('hidden'), 500);
                 }
             }
+            window.showOverlay = showOverlay;
+            window.hideOverlay = hideOverlay;
+            window.setLoadingMsg = setLoadingMsg;
 
             try {
                 // Fetch the File from IndexedDB
@@ -3458,7 +3498,249 @@
 
                 applySelectedBpm(bestBpm);
 
-                hideOverlay();
+                window.hideOverlay();
+
+                // --- BPM Manual Control & Regeneration Logic ---
+                const btnBpmUp = document.getElementById('bpm-up');
+                const btnBpmDown = document.getElementById('bpm-down');
+                const btnGenerateDrum = document.getElementById('generate-drum-btn');
+
+                function adjustBpmManual(delta) {
+                    let currentBpm = parseInt(sessionStorage.getItem('globalTempo') || '120');
+                    let newBpm = currentBpm + delta;
+                    if (newBpm < 20) newBpm = 20;
+                    if (newBpm > 300) newBpm = 300;
+
+                    sessionStorage.setItem('globalTempo', newBpm.toString());
+                    
+                    const bpmDisplay = document.getElementById('bpm-display');
+                    if (bpmDisplay) {
+                        bpmDisplay.innerHTML = `${newBpm}<span style="font-size: 0.6em; font-style: italic; font-weight: normal; color: #71717a; margin-left: 0;">bpm</span>`;
+                    }
+
+                    // Enable Generate button and change style
+                    if (btnGenerateDrum) {
+                        btnGenerateDrum.disabled = false;
+                        btnGenerateDrum.classList.remove('bg-zinc-800', 'text-zinc-500', 'border-zinc-700', 'opacity-50', 'cursor-not-allowed');
+                        btnGenerateDrum.classList.add('bg-cyan-500/10', 'text-cyan-400', 'border-cyan-500/30', 'hover:bg-cyan-500/20', 'active:scale-95', 'shadow-[0_0_15px_rgba(0,240,255,0.1)]', 'cursor-pointer');
+                    }
+
+                    // Update History
+                    const currentFileId = sessionStorage.getItem('currentFileId') || sessionStorage.getItem('uploadedAudioName');
+                    if (currentFileId) {
+                        try {
+                            const bpmHistory = JSON.parse(localStorage.getItem('bpmHistory') || '{}');
+                            bpmHistory[currentFileId] = newBpm.toString();
+                            localStorage.setItem('bpmHistory', JSON.stringify(bpmHistory));
+                        } catch (e) {}
+                    }
+
+                    // Refresh Histogram with manual value
+                    if (typeof drawHistogram === 'function') drawHistogram(newBpm);
+                }
+
+                if (btnBpmUp) btnBpmUp.addEventListener('click', () => adjustBpmManual(1));
+                if (btnBpmDown) btnBpmDown.addEventListener('click', () => adjustBpmManual(-1));
+
+                if (btnGenerateDrum) {
+                    btnGenerateDrum.addEventListener('click', async () => {
+                        if (!globalAudioBuffer) return;
+                        
+                        window.showOverlay('Regenerating Drum Beat...');
+                        try {
+                            // refreshDrumBuffer already uses the BPM from sessionStorage
+                            await refreshDrumBuffer();
+
+                            // Disable button again after completion
+                            btnGenerateDrum.disabled = true;
+                            btnGenerateDrum.classList.add('bg-zinc-800', 'text-zinc-500', 'border-zinc-700', 'opacity-50', 'cursor-not-allowed');
+                            btnGenerateDrum.classList.remove('bg-cyan-500/10', 'text-cyan-400', 'border-cyan-500/30', 'hover:bg-cyan-500/20', 'active:scale-95', 'shadow-[0_0_15px_rgba(0,240,255,0.1)]', 'cursor-pointer');
+                        } catch (err) {
+                            console.error('Regeneration error:', err);
+                        } finally {
+                            window.hideOverlay();
+                        }
+                    });
+                }
+
+                // --- TAP Tempo State ---
+                let tapTimestamps = [];
+                let firstTapAudioTime = 0;
+                let measuredTapBpm = 0;
+                let isTapRecording = false;
+                let isMuteDrumDuringTap = false;
+
+                const tapBpmDisplay = document.getElementById('tap-bpm-display');
+                const tapActionBtn = document.getElementById('tap-action-btn');
+                const tapRecBtn = document.getElementById('tap-rec-btn');
+                const tapStopBtn = document.getElementById('tap-stop-btn');
+                const tapApplyBtn = document.getElementById('tap-apply-btn');
+                const tapRecStatus = document.getElementById('tap-rec-status');
+
+                function calculateTapBpm() {
+                    if (tapTimestamps.length < 2) return;
+
+                    // Calculate intervals between taps
+                    const intervals = [];
+                    for (let i = 1; i < tapTimestamps.length; i++) {
+                        intervals.push(tapTimestamps[i] - tapTimestamps[i - 1]);
+                    }
+
+                    // Reset if the last interval is too long (e.g., > 2 seconds)
+                    const lastInterval = intervals[intervals.length - 1];
+                    if (lastInterval > 2000) {
+                        tapTimestamps = [tapTimestamps[tapTimestamps.length - 1]];
+                        return;
+                    }
+
+                    // Use the last 8 intervals for a rolling average
+                    const recentIntervals = intervals.slice(-8);
+                    const avgInterval = recentIntervals.reduce((a, b) => a + b, 0) / recentIntervals.length;
+                    
+                    measuredTapBpm = Math.round(60000 / avgInterval);
+                    
+                    if (tapBpmDisplay) {
+                        tapBpmDisplay.textContent = measuredTapBpm;
+                        tapBpmDisplay.classList.remove('text-zinc-700');
+                        tapBpmDisplay.classList.add('text-cyan-400');
+                    }
+                }
+
+                function handleTap() {
+                    const now = performance.now();
+                    
+                    // First tap in a new sequence or recording session
+                    if (tapTimestamps.length === 0) {
+                        if (isPlaying) {
+                            firstTapAudioTime = audioContext.currentTime - startTime;
+                            console.log('[Tap] First tap audio time (sync point):', firstTapAudioTime);
+                        } else {
+                            firstTapAudioTime = 0;
+                        }
+                    }
+
+                    tapTimestamps.push(now);
+                    calculateTapBpm();
+
+                    // Visual feedback
+                    if (tapActionBtn) {
+                        tapActionBtn.classList.add('bg-cyan-500/10', 'border-cyan-400/50');
+                        setTimeout(() => tapActionBtn.classList.remove('bg-cyan-500/10', 'border-cyan-400/50'), 100);
+                    }
+                }
+
+                if (tapActionBtn) {
+                    tapActionBtn.addEventListener('mousedown', (e) => {
+                        if (e.button === 0) handleTap();
+                    });
+                }
+
+                // Space bar support for TAP
+                window.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        // Prevent scroll
+                        e.preventDefault();
+                        handleTap();
+                    }
+                });
+
+                if (tapRecBtn) {
+                    tapRecBtn.addEventListener('click', async () => {
+                        if (isTapRecording) return; // Already recording
+
+                        // Start Countdown
+                        const overlay = document.getElementById('countdown-overlay');
+                        const numberEl = document.getElementById('countdown-number');
+                        if (!overlay || !numberEl) return;
+
+                        overlay.classList.remove('hidden');
+                        setTimeout(() => overlay.style.opacity = '1', 10);
+
+                        let count = 3;
+                        numberEl.textContent = count;
+
+                        const timer = setInterval(() => {
+                            count--;
+                            if (count > 0) {
+                                numberEl.textContent = count;
+                            } else {
+                                clearInterval(timer);
+                                overlay.style.opacity = '0';
+                                setTimeout(() => overlay.classList.add('hidden'), 300);
+                                
+                                // Start actual recording/playback
+                                startTapRecording();
+                            }
+                        }, 1000);
+                    });
+                }
+
+                function startTapRecording() {
+                    isTapRecording = true;
+                    isMuteDrumDuringTap = true;
+                    
+                    if (tapRecBtn) tapRecBtn.classList.add('recording', 'border-error/50');
+                    if (tapRecStatus) tapRecStatus.classList.remove('hidden');
+                    tapTimestamps = []; // Reset sequence
+                    
+                    // If already playing, stop first to sync accurately
+                    if (isPlaying) stopAudio();
+                    
+                    // Start playback (metronome will be muted due to isMuteDrumDuringTap)
+                    const playBtn = document.getElementById('btn-play');
+                    if (playBtn) playBtn.click();
+                }
+
+                if (tapStopBtn) {
+                    tapStopBtn.addEventListener('click', () => {
+                        isTapRecording = false;
+                        isMuteDrumDuringTap = false;
+                        
+                        if (tapRecBtn) tapRecBtn.classList.remove('recording', 'border-error/50');
+                        if (tapRecStatus) tapRecStatus.classList.add('hidden');
+                        
+                        if (isPlaying) stopAudio();
+                    });
+                }
+
+                if (tapApplyBtn) {
+                    tapApplyBtn.addEventListener('click', async () => {
+                        if (measuredTapBpm <= 0) {
+                            alert('Please tap a few times to measure BPM first.');
+                            return;
+                        }
+
+                        window.showOverlay('Applying Tap Tempo...');
+                        try {
+                            sessionStorage.setItem('globalTempo', measuredTapBpm.toString());
+                            
+                            const bpmDisplay = document.getElementById('bpm-display');
+                            if (bpmDisplay) {
+                                bpmDisplay.innerHTML = `${measuredTapBpm}<span style="font-size: 0.6em; font-style: italic; font-weight: normal; color: #71717a; margin-left: 0;">bpm</span>`;
+                            }
+
+                            // Update History
+                            const currentFileId = sessionStorage.getItem('currentFileId') || sessionStorage.getItem('uploadedAudioName');
+                            if (currentFileId) {
+                                try {
+                                    const bpmHistory = JSON.parse(localStorage.getItem('bpmHistory') || '{}');
+                                    bpmHistory[currentFileId] = measuredTapBpm.toString();
+                                    localStorage.setItem('bpmHistory', JSON.stringify(bpmHistory));
+                                } catch (e) {}
+                            }
+
+                            // Refresh drum buffer with forced phase from first tap
+                            await refreshDrumBuffer(firstTapAudioTime);
+                            
+                            // Update histogram
+                            if (typeof drawHistogram === 'function') drawHistogram(measuredTapBpm);
+                        } catch (err) {
+                            console.error('Tap Apply error:', err);
+                        } finally {
+                            window.hideOverlay();
+                        }
+                    });
+                }
 
                 // --- Playback Event Listeners ---
                 const btnPlay = document.getElementById('btn-play');
@@ -3478,7 +3760,7 @@
                             sourceNode.connect(gainNode);
 
                             // Drum Source
-                            if (drumAudioBuffer) {
+                            if (drumAudioBuffer && !isMuteDrumDuringTap) {
                                 drumSourceNode = audioContext.createBufferSource();
                                 drumSourceNode.buffer = drumAudioBuffer;
                                 drumSourceNode.connect(drumGainNode);
@@ -3611,6 +3893,21 @@
             }
         });
     </script>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md hidden opacity-0 transition-opacity duration-500">
+        <div class="flex flex-col items-center">
+            <div class="relative w-24 h-24 mb-6">
+                <div class="absolute inset-0 border-4 border-cyan-500/20 rounded-full"></div>
+                <div class="absolute inset-0 border-4 border-cyan-400 rounded-full border-t-transparent animate-spin"></div>
+            </div>
+            <p id="loading-message" class="text-cyan-400 font-mono-data text-sm uppercase tracking-[0.3em] animate-pulse">Analyzing Audio Spectrum...</p>
+        </div>
+    </div>
+
+    <!-- Countdown Overlay -->
+    <div id="countdown-overlay" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div id="countdown-number" class="text-[12rem] font-mono-data text-cyan-400 drop-shadow-[0_0_30px_rgba(0,240,255,0.5)]">3</div>
+    </div>
 </body>
 
 </html>
