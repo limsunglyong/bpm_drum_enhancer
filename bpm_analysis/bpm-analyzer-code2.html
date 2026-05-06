@@ -189,6 +189,34 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8),
                         inset 0 0 32px rgba(0, 240, 255, 0.05);
         }
+
+        /* Context Menu Styles */
+        #context-menu {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            background: rgba(19, 19, 21, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 8px;
+            padding: 6px 0;
+            min-width: 160px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .context-menu-item {
+            padding: 10px 16px;
+            color: #e5e1e4;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+        .context-menu-item:hover {
+            background: rgba(0, 240, 255, 0.1);
+            color: #00f0ff;
+        }
     </style>
     <style>
         *,
@@ -2159,6 +2187,7 @@
         let isPaused = false;
         let startTime = 0;
         let animationId;
+        let isMuteDrumDuringTap = false; // Global to be accessible by startAudio
 
         /**
          * 파일 바이너리를 직접 읽어 원본 샘플 레이트를 추출합니다.
@@ -2244,12 +2273,22 @@
             }
         }
 
+        function getCurrentTime() {
+            if (!globalAudioBuffer) return null;
+            if (isPlaying || isPaused) {
+                return Math.max(0, audioContext.currentTime - startTime);
+            }
+            return null;
+        }
+
         function stopAudio() {
             if (sourceNode) {
+                sourceNode.onended = null; // Important: Clear onended to prevent race condition when starting new playback
                 try { sourceNode.stop(); } catch (e) { }
                 sourceNode = null;
             }
             if (drumSourceNode) {
+                drumSourceNode.onended = null;
                 try { drumSourceNode.stop(); } catch (e) { }
                 drumSourceNode = null;
             }
@@ -2266,6 +2305,54 @@
             const timelineDisp = document.getElementById('timeline-display');
             if (timelineDisp && globalAudioBuffer) {
                 timelineDisp.textContent = `00:00 / ${formatTime(globalAudioBuffer.duration)}`;
+            }
+        }
+
+        let isStarting = false;
+        async function startAudio(offsetSeconds = 0) {
+            if (!globalAudioBuffer || isStarting) return;
+            isStarting = true;
+
+            try {
+                if (isPlaying || isPaused || sourceNode) stopAudio();
+                if (audioContext.state === 'suspended') await audioContext.resume();
+
+                // Main Source
+                sourceNode = audioContext.createBufferSource();
+                sourceNode.buffer = globalAudioBuffer;
+                sourceNode.connect(gainNode);
+
+                // Drum Source
+                if (drumAudioBuffer && !isMuteDrumDuringTap) {
+                    drumSourceNode = audioContext.createBufferSource();
+                    drumSourceNode.buffer = drumAudioBuffer;
+                    drumSourceNode.connect(drumGainNode);
+                }
+
+                const scheduleTime = audioContext.currentTime + 0.05;
+                sourceNode.start(scheduleTime, offsetSeconds);
+
+                if (drumSourceNode) {
+                    const drumStartTime = scheduleTime + (drumOffset / 1000);
+                    if (drumStartTime < audioContext.currentTime) {
+                        const lateStartOffset = (audioContext.currentTime - drumStartTime) + offsetSeconds;
+                        drumSourceNode.start(audioContext.currentTime, lateStartOffset);
+                    } else {
+                        drumSourceNode.start(drumStartTime, offsetSeconds);
+                    }
+                }
+
+                startTime = scheduleTime - offsetSeconds;
+                isPlaying = true;
+                isPaused = false;
+                updatePlayButtonUI(true);
+                updatePlaybackProgress();
+
+                sourceNode.onended = () => {
+                    if (!isPaused) stopAudio();
+                };
+            } finally {
+                isStarting = false;
             }
         }
 
@@ -2928,6 +3015,26 @@
                 const syncEvents = (targetCanvas) => {
                     if (!targetCanvas) return;
 
+                    // Right Click Context Menu
+                    targetCanvas.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        if (!globalAudioBuffer) return;
+
+                        const rect = targetCanvas.getBoundingClientRect();
+                        const mouseX = e.clientX - rect.left;
+                        const visibleSamples = globalAudioBuffer.length / currentZoom;
+                        const step = visibleSamples / targetCanvas.width;
+                        const clickedTime = (currentOffset + (mouseX * step)) / globalAudioBuffer.sampleRate;
+
+                        const menu = document.getElementById('context-menu');
+                        if (menu) {
+                            menu.style.display = 'block';
+                            menu.style.left = `${e.pageX}px`;
+                            menu.style.top = `${e.pageY}px`;
+                            menu.dataset.clickedTime = clickedTime;
+                        }
+                    });
+
                     // Wheel Zoom (마우스 위치 기준)
                     targetCanvas.addEventListener('wheel', (e) => {
                         e.preventDefault();
@@ -2959,7 +3066,7 @@
                         if (currentOffset < 0) currentOffset = 0;
                         if (currentOffset > maxOffset) currentOffset = Math.max(0, maxOffset);
 
-                        drawWaveform();
+                        drawWaveform(getCurrentTime());
                     }, { passive: false });
 
                     // Mouse Drag to Scroll
@@ -2988,7 +3095,7 @@
                             if (currentOffset < 0) currentOffset = 0;
                             if (currentOffset > maxOffset) currentOffset = Math.max(0, maxOffset);
 
-                            drawWaveform();
+                            drawWaveform(getCurrentTime());
                         }
                     });
 
@@ -3611,7 +3718,7 @@
                 let firstTapAudioTime = 0;
                 let measuredTapBpm = 0;
                 let isTapRecording = false;
-                let isMuteDrumDuringTap = false;
+                // isMuteDrumDuringTap is now global
 
                 const tapBpmDisplay = document.getElementById('tap-bpm-display');
                 const tapActionBtn = document.getElementById('tap-action-btn');
@@ -3795,45 +3902,7 @@
                         if (!globalAudioBuffer) return;
 
                         if (!isPlaying && !isPaused) {
-                            if (audioContext.state === 'suspended') await audioContext.resume();
-
-                            // Main Source
-                            sourceNode = audioContext.createBufferSource();
-                            sourceNode.buffer = globalAudioBuffer;
-                            sourceNode.connect(gainNode);
-
-                            // Drum Source
-                            if (drumAudioBuffer && !isMuteDrumDuringTap) {
-                                drumSourceNode = audioContext.createBufferSource();
-                                drumSourceNode.buffer = drumAudioBuffer;
-                                drumSourceNode.connect(drumGainNode);
-                            }
-
-                            // 정밀 동기화를 위한 스케줄링 (0.05초 여유)
-                            const scheduleTime = audioContext.currentTime + 0.05;
-                            sourceNode.start(scheduleTime);
-
-                            if (drumSourceNode) {
-                                // Apply drumOffset (ms) to start time
-                                const drumStartTime = scheduleTime + (drumOffset / 1000);
-                                if (drumStartTime < audioContext.currentTime) {
-                                    // If offset makes start time in the past, start at currentTime but offset into buffer
-                                    const lateStartOffset = audioContext.currentTime - drumStartTime;
-                                    drumSourceNode.start(audioContext.currentTime, lateStartOffset);
-                                } else {
-                                    drumSourceNode.start(drumStartTime);
-                                }
-                            }
-
-                            startTime = scheduleTime;
-
-                            isPlaying = true;
-                            updatePlayButtonUI(true);
-                            updatePlaybackProgress();
-
-                            sourceNode.onended = () => {
-                                if (!isPaused) stopAudio();
-                            };
+                            await startAudio(0);
                         }
                         else if (isPlaying && !isPaused) {
                             await audioContext.suspend();
@@ -3930,6 +3999,25 @@
                 if (btnExportMixed) {
                     btnExportMixed.addEventListener('click', () => exportAudio(true));
                 }
+
+                // --- Context Menu Events ---
+                const ctxMenu = document.getElementById('context-menu');
+                const ctxPlayBtn = document.getElementById('ctx-play-from-here');
+
+                if (ctxPlayBtn) {
+                    ctxPlayBtn.addEventListener('click', () => {
+                        const time = parseFloat(ctxMenu.dataset.clickedTime);
+                        if (!isNaN(time)) {
+                            startAudio(time);
+                        }
+                        ctxMenu.style.display = 'none';
+                    });
+                }
+
+                window.addEventListener('click', () => {
+                    if (ctxMenu) ctxMenu.style.display = 'none';
+                });
+
                 } catch (error) {
                     console.error('Initialization error:', error);
                     alert('Initialization failed: ' + error.message);
@@ -3940,6 +4028,13 @@
             })();
         });
     </script>
+    <!-- Context Menu -->
+    <div id="context-menu">
+        <div class="context-menu-item" id="ctx-play-from-here">
+            <span class="material-symbols-outlined text-sm">play_circle</span>
+            <span>여기서부터 재생</span>
+        </div>
+    </div>
     <!-- Loading Overlay -->
     <div id="loading-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-all duration-700">
         <div class="scanner-line"></div>
