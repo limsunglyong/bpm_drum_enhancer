@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html class="dark" lang="ko">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Focustone DAW · Drum Beat Maker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "surface-dim": "#0c0c0e",
+          "surface": "#131315",
+          "surface-container": "#1b1a1d",
+          "surface-container-lowest": "#0a0a0c",
+          "surface-container-high": "#2a2a2c",
+          "primary-container": "#00f0ff",
+          "primary": "#dbfcff",
+          "on-primary-container": "#003035",
+          "secondary": "#a7ffb3",
+          "secondary-container": "#00ee70",
+          "outline": "#849495",
+          "outline-variant": "#3b494b",
+          "on-surface": "#e5e1e4",
+          "on-surface-variant": "#b9cacb",
+        },
+        fontFamily: {
+          display: ["Space Grotesk", "system-ui", "sans-serif"],
+          "body-md": ["Inter", "system-ui", "sans-serif"],
+          "label-caps": ["Inter", "system-ui", "sans-serif"],
+          "mono-data": ["Space Grotesk", "monospace"],
+        },
+      },
+    },
+  };
+</script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #0c0c0e; }
+  body { font-family: Inter, system-ui, sans-serif; color: #e5e1e4; }
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    user-select: none;
+  }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #353437; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #4a4a4d; }
+
+  .vol-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: rgba(255,255,255,.08);
+    border-radius: 9999px;
+    outline: none;
+    --track-color: #00f0ff;
+  }
+  .vol-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--track-color);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--track-color) 60%, transparent), 0 0 0 3px rgba(0,0,0,.4);
+    cursor: pointer;
+    border: none;
+    transition: transform .12s;
+  }
+  .vol-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  .vol-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--track-color);
+    border: none;
+    cursor: pointer;
+  }
+
+  kbd {
+    font-family: 'Space Grotesk', monospace;
+    border: 1px solid rgba(255,255,255,.08);
+  }
+
+  button { font-family: inherit; }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="number"] { -moz-appearance: textfield; }
+
+  @keyframes stepPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .85; }
+  }
+
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="drum-engine.js"></script>
+  <script type="text/babel" src="components.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>
