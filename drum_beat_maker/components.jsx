@@ -239,6 +239,7 @@ function PageHeader({ bpm, setBpm, signature, onPreview, isPlaying, stepsPerBar,
 function StepMarkers({ playStep, totalSteps, stepsPerBeat, stepsPerBar, gap, minCellPx = 0 }) {
   return (
     <div className="flex items-center pr-2">
+      <div className="w-[272px] shrink-0" />
       <div className="flex-1 grid" style={{ gridTemplateColumns: `repeat(${totalSteps}, minmax(${minCellPx}px,1fr))`, gap }}>
         {Array.from({ length: totalSteps }).map((_, i) => {
           const stepInBar = i % stepsPerBar;
@@ -310,7 +311,7 @@ function TrackRow({
   const muted = track.mute || (anySolo && !track.solo);
   return (
     <div
-      className={`flex items-center py-1.5 rounded-lg transition-all ${padOnly ? 'pr-2' : 'gap-3 px-2'} ${
+      className={`flex items-center py-1.5 rounded-lg transition-all h-full w-full ${padOnly ? 'pr-2' : 'gap-3 px-2'} ${
         selected ? "bg-white/[0.025]" : ""
       }`}
       onClick={onSelect}

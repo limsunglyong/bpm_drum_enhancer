@@ -645,7 +645,7 @@ function App() {
                 <div className="relative">
                   {/* 악기·패드 편집 영역 — 가로 스크롤 */}
                   <div className="overflow-x-auto pb-1">
-                  <div className="flex items-stretch mb-1 pr-2" style={{ minWidth: `${280 + totalSteps * minCellPx}px` }}>
+                  <div className="flex items-stretch mb-1 pr-2" style={{ minWidth: `${280 + totalSteps * minCellPx + (totalSteps - 1) * cellGap}px` }}>
                     <div className="w-[272px] shrink-0" style={{ background: "linear-gradient(160deg,rgba(32,31,33,.95) 0%,rgba(14,14,16,.95) 100%)" }} />
                     <div className="flex-1 grid" style={{ gridTemplateColumns: `repeat(${bars}, minmax(${minCellPx * stepsPerBar + (stepsPerBar - 1) * cellGap}px, 1fr))`, gap: cellGap }}>
                       {Array.from({ length: bars }).map((_, i) => {
@@ -667,7 +667,7 @@ function App() {
                     </div>
                   </div>
                   <StepMarkers playStep={isPlaying ? playStep : -1} totalSteps={totalSteps} stepsPerBeat={stepsPerBeat} stepsPerBar={stepsPerBar} gap={cellGap} minCellPx={minCellPx} />
-                  <div className="mt-2 space-y-0.5 relative" style={{ minWidth: `${280 + totalSteps * minCellPx}px` }}>
+                  <div className="mt-2 space-y-0.5 relative" style={{ minWidth: `${280 + totalSteps * minCellPx + (totalSteps - 1) * cellGap}px` }}>
                     {/* Playhead overlay */}
                     {isPlaying && playStep >= 0 && (
                       <div className="absolute inset-0 pointer-events-none flex items-stretch gap-3 px-2 z-10">
@@ -686,8 +686,8 @@ function App() {
                         </div>
                       </div>
                     )}
-                    {tracks.map((t) => (
-                      <div key={t.id} className={`group ${selectedTrackId === t.id ? "ring-1 ring-white/5 rounded-lg" : ""}`}>
+                    {tracks.map((t, index) => (
+                      <div key={t.id} ref={(el) => padRowRefs.current[index] = el} className={`group ${selectedTrackId === t.id ? "ring-1 ring-white/5 rounded-lg" : ""}`}>
                         <TrackRow
                           track={t}
                           steps={pattern[t.id] || new Array(totalSteps).fill(0)}
@@ -724,8 +724,8 @@ function App() {
                     <div style={{ height: '28px' }} />
                     {/* 트랙 레이블 */}
                     <div className="mt-2 space-y-0.5">
-                      {tracks.map((t) => (
-                        <div key={t.id} className="group">
+                      {tracks.map((t, index) => (
+                        <div key={t.id} className="group" style={{ height: rowHeights[index] ? `${rowHeights[index]}px` : 'auto' }}>
                           <TrackRow
                             track={t}
                             steps={pattern[t.id] || new Array(totalSteps).fill(0)}
