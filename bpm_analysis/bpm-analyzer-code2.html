@@ -13,9 +13,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet">
     <!-- Timeline Font -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@1,200&display=swap"
         rel="stylesheet">
@@ -1890,11 +1887,11 @@
             <div class="mt-auto pt-6 border-t border-zinc-800">
                 <div class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-3 px-2">Export Selection</div>
                 <div class="flex flex-col gap-1">
-                    <button id="export-drum" class="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-cyan-400/10 hover:text-cyan-400 transition-all group">
+                    <button type="button" id="export-drum" class="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-cyan-400/10 hover:text-cyan-400 transition-all group">
                         <span class="material-symbols-outlined text-[18px]">download</span>
                         <span class="text-xs font-bold">Drum beat export</span>
                     </button>
-                    <button id="export-mixed" class="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-cyan-400/10 hover:text-cyan-400 transition-all group">
+                    <button type="button" id="export-mixed" class="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-cyan-400/10 hover:text-cyan-400 transition-all group">
                         <span class="material-symbols-outlined text-[18px]">library_music</span>
                         <span class="text-xs font-bold">Mixing export</span>
                     </button>
@@ -1917,16 +1914,16 @@
                                         <div class="flex items-center gap-2">
                                             <p id="bpm-display" class="text-2xl font-mono-data text-cyan-400">--</p>
                                             <div class="flex flex-col -space-y-1">
-                                                <button id="bpm-up" class="text-zinc-500 hover:text-cyan-400 transition-colors flex items-center justify-center h-4 w-4" title="BPM Up">
+                                                <button type="button" id="bpm-up" class="text-zinc-500 hover:text-cyan-400 transition-colors flex items-center justify-center h-4 w-4" title="BPM Up" aria-label="Increase BPM">
                                                     <span class="material-symbols-outlined text-[18px]">keyboard_arrow_up</span>
                                                 </button>
-                                                <button id="bpm-down" class="text-zinc-500 hover:text-cyan-400 transition-colors flex items-center justify-center h-4 w-4" title="BPM Down">
+                                                <button type="button" id="bpm-down" class="text-zinc-500 hover:text-cyan-400 transition-colors flex items-center justify-center h-4 w-4" title="BPM Down" aria-label="Decrease BPM">
                                                     <span class="material-symbols-outlined text-[18px]">keyboard_arrow_down</span>
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
-                                    <button id="generate-drum-btn" disabled class="px-4 py-2 bg-zinc-800 text-zinc-500 border border-zinc-700 rounded-lg text-xs font-bold transition-all flex items-center gap-2 group opacity-50 cursor-not-allowed">
+                                    <button type="button" id="generate-drum-btn" disabled class="px-4 py-2 bg-zinc-800 text-zinc-500 border border-zinc-700 rounded-lg text-xs font-bold transition-all flex items-center gap-2 group opacity-50 cursor-not-allowed">
                                         <span class="material-symbols-outlined text-[18px] group-hover:rotate-180 transition-transform duration-500">sync</span>
                                         Generate Drum Beat
                                     </button>
@@ -2003,14 +2000,14 @@
                             <div class="flex items-center gap-4">
                                 <div class="flex items-center gap-2 mr-2">
                                     <span id="tap-rec-status" class="text-[10px] font-bold text-error uppercase tracking-widest animate-pulse hidden">REC</span>
-                                    <button id="tap-rec-btn" class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-error transition-all active:scale-90 group" title="Start Playback & Record Taps">
+                                    <button type="button" id="tap-rec-btn" class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-error transition-all active:scale-90 group" title="Start Playback & Record Taps" aria-label="Start playback and record taps">
                                         <span class="material-symbols-outlined text-[18px] group-[.recording]:text-error">fiber_manual_record</span>
                                     </button>
-                                    <button id="tap-stop-btn" class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-white transition-all active:scale-90" title="Stop Playback & Recording">
+                                    <button type="button" id="tap-stop-btn" class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-white transition-all active:scale-90" title="Stop Playback & Recording" aria-label="Stop playback and recording">
                                         <span class="material-symbols-outlined text-[18px]">stop</span>
                                     </button>
                                 </div>
-                                <button id="tap-apply-btn" class="px-3 py-1.5 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-500/20 transition-all active:scale-95" title="Apply Tapped BPM">
+                                <button type="button" id="tap-apply-btn" class="px-3 py-1.5 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-500/20 transition-all active:scale-95" title="Apply Tapped BPM">
                                     Apply
                                 </button>
                             </div>
@@ -2024,7 +2021,7 @@
                             </div>
 
                             <!-- Big Tap Button -->
-                            <button id="tap-action-btn" class="flex-1 h-32 bg-zinc-900 border-2 border-zinc-800 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-zinc-800 hover:border-cyan-400/50 transition-all active:bg-cyan-400/10 group shadow-lg">
+                            <button type="button" id="tap-action-btn" class="flex-1 h-32 bg-zinc-900 border-2 border-zinc-800 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-zinc-800 hover:border-cyan-400/50 transition-all active:bg-cyan-400/10 group shadow-lg">
                                 <span class="material-symbols-outlined text-4xl text-zinc-600 group-hover:text-cyan-400 transition-colors">touch_app</span>
                                 <span class="text-[10px] font-bold uppercase tracking-[0.1em] text-zinc-500 group-hover:text-cyan-400 transition-colors">TAP (Mouse left click / Space Key)</span>
                             </button>
@@ -2089,13 +2086,13 @@
                         Beat Division
                     </div>
                     <div class="flex bg-zinc-900/50 p-0.5 rounded-lg border border-zinc-800">
-                        <button id="group-1-1"
+                        <button type="button" id="group-1-1"
                             class="group-div-btn px-3 py-1 text-[11px] font-bold rounded-md transition-all bg-cyan-500/20 text-cyan-400"
                             data-division="1/1">1/1</button>
-                        <button id="group-1-2"
+                        <button type="button" id="group-1-2"
                             class="group-div-btn px-3 py-1 text-[11px] font-bold rounded-md transition-all text-zinc-500 hover:text-zinc-300"
                             data-division="1/2">1/2</button>
-                        <button id="group-1-4"
+                        <button type="button" id="group-1-4"
                             class="group-div-btn px-3 py-1 text-[11px] font-bold rounded-md transition-all text-zinc-500 hover:text-zinc-300"
                             data-division="1/4">1/4</button>
                     </div>
@@ -2105,11 +2102,11 @@
 
         <!-- 재생 컨트롤 (중) -->
         <div class="flex items-center gap-6">
-            <button id="btn-play"
+            <button type="button" id="btn-play" aria-label="Play or pause"
                 class="w-12 h-12 bg-zinc-950 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-100 hover:border-cyan-400/50 hover:text-cyan-400 transition-all active:scale-90 shadow-lg">
                 <span id="play-icon" class="material-symbols-outlined text-3xl">play_arrow</span>
             </button>
-            <button id="btn-stop"
+            <button type="button" id="btn-stop" aria-label="Stop"
                 class="w-12 h-12 bg-zinc-950 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-100 hover:border-error/50 hover:text-error transition-all active:scale-90 shadow-lg">
                 <span class="material-symbols-outlined text-3xl">stop</span>
             </button>
@@ -3639,9 +3636,9 @@
                         span.className = 'candidate-item text-zinc-400 cursor-pointer hover:text-white transition-colors px-1';
                         span.dataset.bpm = c.bpm;
                         // 절대 최빈값(Global)인 경우 별도 표시 가능
-                        const label = c.bpm === bestBpm ? `⭐${c.bpm}` : c.bpm;
+                        const label = c.bpm === bestBpm ? `${c.bpm} (best)` : c.bpm;
                         span.textContent = `${label} BPM (${strength}%)`;
-                        span.onclick = () => applySelectedBpm(c.bpm);
+                        span.addEventListener('click', () => applySelectedBpm(c.bpm));
                         candidatesContainer.appendChild(span);
                     });
                 }
