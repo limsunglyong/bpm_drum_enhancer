@@ -1,6 +1,6 @@
 // Focustone DAW Beat Maker — main app
 
-const { useState, useEffect, useLayoutEffect, useRef, useCallback } = React;
+const { useState, useEffect, useRef, useCallback } = React;
 
 // ────────────────────────────────────────────────────────────
 //  Defaults
@@ -365,18 +365,6 @@ function App() {
   const stepsPerBeat = Math.max(1, Math.round(stepsPerBar / beats));
   const cellGap     = totalSteps <= 16 ? 6 : totalSteps <= 32 ? 4 : 3;
   const minCellPx   = 40;
-  const padRowRefs = useRef([]);
-  const [rowHeights, setRowHeights] = useState([]);
-
-  useLayoutEffect(() => {
-    const update = () => {
-      setRowHeights(padRowRefs.current.map(r => r ? r.offsetHeight : 0));
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    padRowRefs.current.forEach(r => r && ro.observe(r));
-    return () => ro.disconnect();
-  }, [tracks.length, totalSteps]);
 
   const addNotif = useCallback((message, icon = 'check_circle') => {
     const time = new Date().toLocaleTimeString();
@@ -644,7 +632,7 @@ function App() {
                 />
                 <div className="relative">
                   {/* 악기·패드 편집 영역 — 가로 스크롤 */}
-                  <div className="overflow-x-auto pb-1">
+                  <div className="sequencer-scroll overflow-x-auto pb-1">
                   <div className="flex items-stretch mb-1 pr-2" style={{ minWidth: `${280 + totalSteps * minCellPx + (totalSteps - 1) * cellGap}px` }}>
                     <div className="w-[272px] shrink-0" style={{ background: "linear-gradient(160deg,rgba(32,31,33,.95) 0%,rgba(14,14,16,.95) 100%)" }} />
                     <div className="flex-1 grid" style={{ gridTemplateColumns: `repeat(${bars}, minmax(${minCellPx * stepsPerBar + (stepsPerBar - 1) * cellGap}px, 1fr))`, gap: cellGap }}>
@@ -686,8 +674,8 @@ function App() {
                         </div>
                       </div>
                     )}
-                    {tracks.map((t, index) => (
-                      <div key={t.id} ref={(el) => padRowRefs.current[index] = el} className={`group ${selectedTrackId === t.id ? "ring-1 ring-white/5 rounded-lg" : ""}`}>
+                    {tracks.map((t) => (
+                      <div key={t.id} className={`group ${selectedTrackId === t.id ? "ring-1 ring-white/5 rounded-lg" : ""}`}>
                         <TrackRow
                           track={t}
                           steps={pattern[t.id] || new Array(totalSteps).fill(0)}
@@ -712,45 +700,6 @@ function App() {
                     ))}
                   </div>
                   </div>{/* /overflow-x scroll */}
-
-                  {/* 레이블 고정 오버레이 — 스크롤 컨테이너 위에 absolute 배치 */}
-                  <div className="absolute top-0 left-0 z-20"
-                    style={{ width: '272px', background: 'linear-gradient(160deg,rgba(20,19,22,1) 0%,rgba(12,12,14,1) 100%)' }}>
-                    {/* BAR ruler 높이 맞춤 spacer */}
-                    <div className="flex items-stretch mb-1" style={{ visibility: 'hidden' }}>
-                      <div className="rounded px-1.5 py-0.5 text-[9px]">0</div>
-                    </div>
-                    {/* StepMarkers 높이 맞춤 spacer (h-7 = 28px) */}
-                    <div style={{ height: '28px' }} />
-                    {/* 트랙 레이블 */}
-                    <div className="mt-2 space-y-0.5">
-                      {tracks.map((t, index) => (
-                        <div key={t.id} className="group" style={{ height: rowHeights[index] ? `${rowHeights[index]}px` : 'auto' }}>
-                          <TrackRow
-                            track={t}
-                            steps={pattern[t.id] || new Array(totalSteps).fill(0)}
-                            playStep={isPlaying ? playStep : -1}
-                            isPlaying={isPlaying}
-                            selected={selectedTrackId === t.id}
-                            onSelect={() => setSelectedTrackId(t.id)}
-                            onToggleStep={(i) => handleStepToggle(t.id, i)}
-                            onSetVelocity={(i, v) => handleSetVelocity(t.id, i, v)}
-                            onMute={() => updateTrack(t.id, { mute: !t.mute })}
-                            onSolo={() => updateTrack(t.id, { solo: !t.solo })}
-                            onVolume={(v) => updateTrack(t.id, { volume: v })}
-                            onRemove={() => removeTrack(t.id)}
-                            anySolo={anySolo}
-                            totalSteps={totalSteps}
-                            stepsPerBeat={stepsPerBeat}
-                            stepsPerBar={stepsPerBar}
-                            gap={cellGap}
-                            minCellPx={minCellPx}
-                            labelOnly={true}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
 
                   <AddInstrument onAdd={addTrack} existingVoices={tracks.map((t) => t.voice)} />
                   <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between font-mono-data text-[11px] text-zinc-500">

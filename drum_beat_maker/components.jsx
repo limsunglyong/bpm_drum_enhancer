@@ -305,19 +305,17 @@ function TrackRow({
   stepsPerBar,
   gap,
   minCellPx = 0,
-  labelOnly = false,
-  padOnly = false,
 }) {
   const muted = track.mute || (anySolo && !track.solo);
   return (
     <div
-      className={`flex items-center py-1.5 rounded-lg transition-all h-full w-full ${padOnly ? 'pr-2' : 'gap-3 px-2'} ${
+      className={`flex items-center py-1.5 rounded-lg transition-all h-full w-full gap-3 px-2 ${
         selected ? "bg-white/[0.025]" : ""
       }`}
       onClick={onSelect}
     >
       {/* Track header: name + M/S + volume */}
-      <div className="track-label w-[252px] shrink-0 flex items-center gap-2.5 pr-2 relative z-10 rounded-l-lg"
+      <div className="track-label sticky left-0 z-20 w-[252px] shrink-0 flex items-center gap-2.5 pr-2 rounded-l-lg"
         style={{ background: selected
           ? "linear-gradient(90deg,rgba(0,240,255,.10) 0%,rgba(0,240,255,.04) 100%)"
           : "linear-gradient(160deg,rgba(25,24,26,.98) 0%,rgba(14,14,16,.98) 100%)",
@@ -381,7 +379,7 @@ function TrackRow({
       </div>
 
       {/* Step pads */}
-      {!labelOnly && <div className="flex-1 grid" style={{ gridTemplateColumns: `repeat(${totalSteps}, minmax(${minCellPx}px,1fr))`, gap }}>
+      <div className="flex-1 grid" style={{ gridTemplateColumns: `repeat(${totalSteps}, minmax(${minCellPx}px,1fr))`, gap }}>
         {Array.from({ length: totalSteps }).map((_, i) => {
           const v = steps[i] || 0;
           const on = v > 0;
@@ -432,7 +430,7 @@ function TrackRow({
             </button>
           );
         })}
-      </div>}
+      </div>
     </div>
   );
 }
