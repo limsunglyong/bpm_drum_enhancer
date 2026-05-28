@@ -365,6 +365,21 @@ function App() {
   const stepsPerBeat = Math.max(1, Math.round(stepsPerBar / beats));
   const cellGap     = totalSteps <= 16 ? 6 : totalSteps <= 32 ? 4 : 3;
   const minCellPx   = 40;
+  const toRoman = (num) => {
+    const numerals = [
+      ["M", 1000], ["CM", 900], ["D", 500], ["CD", 400],
+      ["C", 100], ["XC", 90], ["L", 50], ["XL", 40],
+      ["X", 10], ["IX", 9], ["V", 5], ["IV", 4], ["I", 1],
+    ];
+    let value = num;
+    return numerals.reduce((out, [roman, arabic]) => {
+      while (value >= arabic) {
+        out += roman;
+        value -= arabic;
+      }
+      return out;
+    }, "");
+  };
 
   const addNotif = useCallback((message, icon = 'check_circle') => {
     const time = new Date().toLocaleTimeString();
@@ -641,13 +656,13 @@ function App() {
                         return (
                           <div key={i} className="rounded px-1.5 py-0.5 text-center"
                             style={{
-                              background: isCurrentBar ? "rgba(0,240,255,.12)" : "rgba(255,255,255,.03)",
-                              border: `1px solid ${isCurrentBar ? "rgba(0,240,255,.35)" : "rgba(255,255,255,.05)"}`,
-                              boxShadow: isCurrentBar ? "0 0 8px rgba(0,240,255,.2)" : "none",
+                              background: isCurrentBar ? "rgba(0,240,255,.14)" : "rgba(255,255,255,.045)",
+                              border: `1px solid ${isCurrentBar ? "rgba(0,240,255,.65)" : "rgba(132,148,149,.34)"}`,
+                              boxShadow: isCurrentBar ? "0 0 10px rgba(0,240,255,.28)" : "inset 0 1px 0 rgba(255,255,255,.045)",
                             }}>
-                            <span className="font-mono-data text-[9px] tracking-widest uppercase"
-                              style={{ color: isCurrentBar ? "#7df4ff" : "#52525b" }}>
-                              {i + 1}
+                            <span className="font-mono-data text-[12px] font-bold tracking-widest uppercase"
+                              style={{ color: isCurrentBar ? "#9ff8ff" : "#8a9a9b", textShadow: isCurrentBar ? "0 0 8px rgba(0,240,255,.55)" : "none" }}>
+                              {toRoman(i + 1)}
                             </span>
                           </div>
                         );

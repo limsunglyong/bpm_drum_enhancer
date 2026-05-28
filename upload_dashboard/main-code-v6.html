@@ -8,6 +8,7 @@
     <link rel="icon" href="focustone_logo.svg" type="image/svg+xml">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+    <script src="../version.js"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -138,7 +139,7 @@
                 <span class="material-symbols-outlined text-zinc-950 font-bold">equalizer</span>
             </div>
             <h1 class="font-h2 text-xl tracking-tighter italic text-zinc-100 flex items-baseline gap-1">Focustone <span
-                    class="text-cyan-400">DAW</span><span class="text-zinc-500 text-xs not-italic ml-1">v0.9.0</span></h1>
+                    class="text-cyan-400">DAW</span><span class="app-version text-zinc-500 text-xs not-italic ml-1"></span></h1>
             </h1>
         </div>
         <nav class="hidden md:flex items-center gap-8 font-['Space_Grotesk'] tracking-tight">
@@ -305,7 +306,7 @@
         class="h-20 border-t border-zinc-800 bg-surface-dim/95 backdrop-blur-xl px-8 flex items-center justify-center gap-12 sticky bottom-0 z-50">
         <!-- 볼륨 슬라이더 (좌) -->
         <div class="absolute left-8 flex items-center gap-4">
-            <span class="material-symbols-outlined text-zinc-500 text-sm">volume_up</span>
+            <span id="master-mute-toggle" class="material-symbols-outlined text-zinc-500 text-sm cursor-pointer hover:text-cyan-400 transition-colors" role="button" tabindex="0" title="Mute master gain">volume_up</span>
             <div class="flex flex-col justify-center">
                 <div class="text-[10px] text-zinc-500 font-mono-data uppercase tracking-widest leading-none mb-2">
                     Master Gain
@@ -348,7 +349,10 @@
     </footer>
 
     <script>
-        const APP_VERSION = 'v0.9.0';
+        document.querySelectorAll('.app-version').forEach((el) => {
+            el.textContent = window.APP_VERSION || '';
+        });
+
         let audioContext;
         let audioBuffer;
         let sourceNode;
@@ -500,6 +504,20 @@
             slider.style.background = `linear-gradient(to right, #00f0ff 0%, #00f0ff ${value}%, #272a2c ${value}%, #272a2c 100%)`;
         }
 
+        let lastMasterVolume = parseFloat(volControl.value) > 0 ? volControl.value : '0.75';
+        const masterMuteToggle = document.getElementById('master-mute-toggle');
+
+        function setMasterVolume(value) {
+            volControl.value = value;
+            volControl.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        function updateMasterMuteIcon() {
+            if (masterMuteToggle) {
+                masterMuteToggle.textContent = parseFloat(volControl.value) === 0 ? 'volume_off' : 'volume_up';
+            }
+        }
+
         volControl.addEventListener('input', (e) => {
             if (gainNode) {
                 gainNode.gain.value = e.target.value;
@@ -509,13 +527,37 @@
         });
 
         // 초기 로드 시 배경색 적용 및 데이터 복원
+        volControl.addEventListener('input', (e) => {
+            if (parseFloat(e.target.value) > 0) {
+                lastMasterVolume = e.target.value;
+            }
+            updateMasterMuteIcon();
+        });
+
+        if (masterMuteToggle) {
+            const toggleMasterMute = () => {
+                setMasterVolume(parseFloat(volControl.value) === 0 ? lastMasterVolume : 0);
+            };
+            masterMuteToggle.addEventListener('click', toggleMasterMute);
+            masterMuteToggle.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleMasterMute();
+                }
+            });
+        }
+
         window.addEventListener('DOMContentLoaded', async () => {
             // 볼륨 값 복원
             const savedVolume = localStorage.getItem('masterVolume');
             if (savedVolume !== null) {
                 volControl.value = savedVolume;
             }
+            if (parseFloat(volControl.value) > 0) {
+                lastMasterVolume = volControl.value;
+            }
             updateSliderBackground(volControl);
+            updateMasterMuteIcon();
 
             // 로컬 스토리지에서 최근 파일 목록 불러오기
             try {

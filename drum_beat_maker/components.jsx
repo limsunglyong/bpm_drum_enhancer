@@ -1,6 +1,7 @@
 // Focustone DAW Beat Maker — UI components
 
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
+const appVersion = window.APP_VERSION || "";
 
 // ────────────────────────────────────────────────────────────
 //  Icon helper
@@ -44,7 +45,7 @@ function TopBar({ onExport, notifications = [], notifOpen, onNotifToggle, onNoti
         </div>
         <h1 className="font-display text-xl tracking-tighter italic text-zinc-100 flex items-baseline gap-1">
           Focustone <span className="text-cyan-400">DAW</span>
-          <span className="text-zinc-500 text-xs not-italic ml-1">v0.9.0</span>
+          <span className="text-zinc-500 text-xs not-italic ml-1">{appVersion}</span>
         </h1>
       </div>
 
@@ -236,6 +237,22 @@ function PageHeader({ bpm, setBpm, signature, onPreview, isPlaying, stepsPerBar,
 // ────────────────────────────────────────────────────────────
 //  Step Markers
 // ────────────────────────────────────────────────────────────
+function romanNumeral(num) {
+  const numerals = [
+    ["M", 1000], ["CM", 900], ["D", 500], ["CD", 400],
+    ["C", 100], ["XC", 90], ["L", 50], ["XL", 40],
+    ["X", 10], ["IX", 9], ["V", 5], ["IV", 4], ["I", 1],
+  ];
+  let value = num;
+  return numerals.reduce((out, [roman, arabic]) => {
+    while (value >= arabic) {
+      out += roman;
+      value -= arabic;
+    }
+    return out;
+  }, "");
+}
+
 function StepMarkers({ playStep, totalSteps, stepsPerBeat, stepsPerBar, gap, minCellPx = 0 }) {
   return (
     <div className="flex items-center pr-2">
@@ -252,17 +269,17 @@ function StepMarkers({ playStep, totalSteps, stepsPerBeat, stepsPerBar, gap, min
             <div key={i} className="flex flex-col items-center justify-end h-7 gap-0.5">
               {isBeatStart && (
                 <span
-                  className={`font-display text-[10px] font-bold tracking-widest uppercase ${
+                  className={`font-display ${isBarStart ? "text-[12px]" : "text-[10px]"} font-bold tracking-widest uppercase ${
                     isActive
                       ? "text-cyan-300"
                       : isBarStart
-                      ? "text-cyan-300/80"
+                      ? "text-cyan-200"
                       : "text-cyan-400/55"
                   }`}
-                  style={isActive ? { textShadow: "0 0 8px #00f0ff" } : {}}
+                  style={isActive || isBarStart ? { textShadow: "0 0 8px rgba(0,240,255,.55)" } : {}}
                   title={isBarStart ? `Bar ${bar}` : `Beat ${beat}`}
                 >
-                  {isBarStart ? `${bar}` : beat}
+                  {isBarStart ? romanNumeral(bar) : beat}
                 </span>
               )}
               {!isBeatStart && (
@@ -315,11 +332,11 @@ function TrackRow({
       onClick={onSelect}
     >
       {/* Track header: name + M/S + volume */}
-      <div className="track-label sticky left-0 z-20 w-[252px] shrink-0 flex items-center gap-2.5 pr-2 rounded-l-lg"
+      <div className="track-label sticky left-2 z-20 w-[252px] shrink-0 self-stretch flex items-center gap-2.5 pr-2 rounded-l-lg"
         style={{ background: selected
-          ? "linear-gradient(90deg,rgba(0,240,255,.10) 0%,rgba(0,240,255,.04) 100%)"
+          ? "linear-gradient(90deg,rgba(250,204,21,.52) 0%,rgba(250,204,21,.24) 100%)"
           : "linear-gradient(160deg,rgba(25,24,26,.98) 0%,rgba(14,14,16,.98) 100%)",
-          boxShadow: selected ? "inset 3px 0 0 rgba(0,240,255,.5)" : "inset 3px 0 0 transparent" }}>
+          boxShadow: selected ? "inset 3px 0 0 rgba(250,204,21,.85), 0 0 18px rgba(250,204,21,.12)" : "inset 3px 0 0 transparent" }}>
         <div
           className="w-1 h-9 rounded-full shrink-0"
           style={{
